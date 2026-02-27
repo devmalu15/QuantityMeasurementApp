@@ -1,0 +1,14 @@
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\bin\Debug\net10.0\QuantityMeasurementApp.Console.exe
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\bin\Debug\net10.0\QuantityMeasurementApp.Console.deps.json
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\bin\Debug\net10.0\QuantityMeasurementApp.Console.runtimeconfig.json
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\bin\Debug\net10.0\QuantityMeasurementApp.Console.dll
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\bin\Debug\net10.0\QuantityMeasurementApp.Console.pdb
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\QuantityMeasurementApp.Console.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\QuantityMeasurementApp.Console.AssemblyInfoInputs.cache
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\QuantityMeasurementApp.Console.AssemblyInfo.cs
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\QuantityMeasurementApp.Console.csproj.CoreCompileInputs.cache
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\QuantityMeasurementApp.Console.dll
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\refint\QuantityMeasurementApp.Console.dll
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\QuantityMeasurementApp.Console.pdb
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\QuantityMeasurementApp.Console.genruntimeconfig.cache
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\ref\QuantityMeasurementApp.Console.dll
