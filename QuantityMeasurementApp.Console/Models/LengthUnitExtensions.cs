@@ -10,6 +10,8 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
             {
                 LengthUnit.Feet => 1.0,
                 LengthUnit.Inch => 1.0 / 12.0,
+                LengthUnit.Yard => 3.0,
+                LengthUnit.Centimeter => 0.393701 / 12.0,
                 _ => throw new ArgumentOutOfRangeException(nameof(u), "Unsupported unit")
             };
         }

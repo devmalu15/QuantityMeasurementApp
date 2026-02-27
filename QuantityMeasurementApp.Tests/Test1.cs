@@ -6,11 +6,10 @@ namespace QuantityMeasurementApp.Tests
 {
     [TestClass]
     public class QuantityMeasurementAppTest
-{
+    {
         [TestMethod]
         public void testEquality_SameValue()
         {
-            // given two identical feet measurements
             bool result = QApp.AreFeetEqual(1.0, 1.0);
             Assert.IsTrue(result, "1.0 ft should equal 1.0 ft");
         }
@@ -39,12 +38,10 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void testEquality_NonNumericInput()
         {
-            // since the class only accepts doubles, comparing to a non-Feet object should be false
             var f = new Feet(2.0);
             Assert.IsFalse(f.Equals("not a feet"), "Comparison against different type should return false");
         }
 
-        // ----- Inches tests (UC2) -----
         [TestMethod]
         public void testInchesEquality_SameValue()
         {
@@ -80,11 +77,9 @@ namespace QuantityMeasurementApp.Tests
             Assert.IsFalse(i.Equals(123), "Comparison against different type (int) should return false");
         }
 
-        // ----- Cross-unit tests (UC3) -----
         [TestMethod]
         public void testEquality_FeetToInch_EquivalentValue()
         {
-            // 1 foot == 12 inches
             bool result = QApp.AreEqualAcrossUnits(1.0, LengthUnit.Feet, 12.0, LengthUnit.Inch);
             Assert.IsTrue(result, "1.0 ft should equal 12.0 inch");
         }
@@ -110,6 +105,64 @@ namespace QuantityMeasurementApp.Tests
                 thrown = true;
             }
             Assert.IsTrue(thrown, "Expected ArgumentOutOfRangeException for invalid unit");
+        }
+
+        [TestMethod]
+        public void testEquality_YardToYard_SameValue()
+        {
+            bool result = QApp.AreEqualAcrossUnits(1.0, LengthUnit.Yard, 1.0, LengthUnit.Yard);
+            Assert.IsTrue(result, "1.0 yard should equal 1.0 yard");
+        }
+
+        [TestMethod]
+        public void testEquality_YardToYard_DifferentValue()
+        {
+            bool result = QApp.AreEqualAcrossUnits(1.0, LengthUnit.Yard, 2.0, LengthUnit.Yard);
+            Assert.IsFalse(result, "1.0 yard should not equal 2.0 yard");
+        }
+
+        [TestMethod]
+        public void testEquality_YardToFeet_EquivalentValue()
+        {
+            bool result = QApp.AreEqualAcrossUnits(1.0, LengthUnit.Yard, 3.0, LengthUnit.Feet);
+            Assert.IsTrue(result, "1.0 yard should equal 3.0 feet");
+        }
+
+        [TestMethod]
+        public void testEquality_YardToInches_EquivalentValue()
+        {
+            bool result = QApp.AreEqualAcrossUnits(1.0, LengthUnit.Yard, 36.0, LengthUnit.Inch);
+            Assert.IsTrue(result, "1.0 yard should equal 36.0 inches");
+        }
+
+        [TestMethod]
+        public void testEquality_CentimeterToCentimeter_SameValue()
+        {
+            bool result = QApp.AreEqualAcrossUnits(2.0, LengthUnit.Centimeter, 2.0, LengthUnit.Centimeter);
+            Assert.IsTrue(result, "2.0 cm should equal 2.0 cm");
+        }
+
+        [TestMethod]
+        public void testEquality_CentimeterToInch_EquivalentValue()
+        {
+            bool result = QApp.AreEqualAcrossUnits(1.0, LengthUnit.Centimeter, 0.393701, LengthUnit.Inch);
+            Assert.IsTrue(result, "1.0 cm should equal 0.393701 inches");
+        }
+
+        [TestMethod]
+        public void testEquality_CentimeterToFeet_NonEquivalentValue()
+        {
+            bool result = QApp.AreEqualAcrossUnits(1.0, LengthUnit.Centimeter, 1.0, LengthUnit.Feet);
+            Assert.IsFalse(result, "1.0 cm should not equal 1.0 feet");
+        }
+
+        [TestMethod]
+        public void testEquality_MultiUnit_TransitiveProperty()
+        {
+            bool a = QApp.AreEqualAcrossUnits(1.0, LengthUnit.Yard, 3.0, LengthUnit.Feet);
+            bool b = QApp.AreEqualAcrossUnits(3.0, LengthUnit.Feet, 36.0, LengthUnit.Inch);
+            bool c = QApp.AreEqualAcrossUnits(1.0, LengthUnit.Yard, 36.0, LengthUnit.Inch);
+            Assert.IsTrue(a && b && c, "Transitive equality should hold across yard/feet/inch");
         }
     }
 }
