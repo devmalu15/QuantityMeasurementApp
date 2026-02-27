@@ -164,5 +164,101 @@ namespace QuantityMeasurementApp.Tests
             bool c = QApp.AreEqualAcrossUnits(1.0, LengthUnit.Yard, 36.0, LengthUnit.Inch);
             Assert.IsTrue(a && b && c, "Transitive equality should hold across yard/feet/inch");
         }
+
+        [TestMethod]
+        public void testConversion_FeetToInches()
+        {
+            double result = QApp.Convert(1.0, LengthUnit.Feet, LengthUnit.Inch);
+            Assert.AreEqual(12.0, result, 1e-9, "1 foot should be 12 inches");
+        }
+
+        [TestMethod]
+        public void testConversion_InchesToFeet()
+        {
+            double result = QApp.Convert(24.0, LengthUnit.Inch, LengthUnit.Feet);
+            Assert.AreEqual(2.0, result, 1e-9, "24 inches should be 2 feet");
+        }
+
+        [TestMethod]
+        public void testConversion_YardsToInches()
+        {
+            double result = QApp.Convert(1.0, LengthUnit.Yard, LengthUnit.Inch);
+            Assert.AreEqual(36.0, result, 1e-9, "1 yard should be 36 inches");
+        }
+
+        [TestMethod]
+        public void testConversion_InchesToYards()
+        {
+            double result = QApp.Convert(72.0, LengthUnit.Inch, LengthUnit.Yard);
+            Assert.AreEqual(2.0, result, 1e-9, "72 inches should be 2 yards");
+        }
+
+        [TestMethod]
+        public void testConversion_CentimetersToInches()
+        {
+            double result = QApp.Convert(2.54, LengthUnit.Centimeter, LengthUnit.Inch);
+            Assert.AreEqual(1.0, result, 1e-6, "2.54 cm should be approximately 1 inch");
+        }
+
+        [TestMethod]
+        public void testConversion_FootToYard()
+        {
+            double result = QApp.Convert(6.0, LengthUnit.Feet, LengthUnit.Yard);
+            Assert.AreEqual(2.0, result, 1e-9, "6 feet should be 2 yards");
+        }
+
+        [TestMethod]
+        public void testConversion_RoundTrip_PreservesValue()
+        {
+            double v = 5.5;
+            double a = QApp.Convert(v, LengthUnit.Feet, LengthUnit.Inch);
+            double b = QApp.Convert(a, LengthUnit.Inch, LengthUnit.Feet);
+            Assert.AreEqual(v, b, 1e-6, "Round-trip conversion should preserve value within tolerance");
+        }
+
+        [TestMethod]
+        public void testConversion_ZeroValue()
+        {
+            double result = QApp.Convert(0.0, LengthUnit.Feet, LengthUnit.Inch);
+            Assert.AreEqual(0.0, result, 1e-9, "0 feet should be 0 inches");
+        }
+
+        [TestMethod]
+        public void testConversion_NegativeValue()
+        {
+            double result = QApp.Convert(-1.0, LengthUnit.Feet, LengthUnit.Inch);
+            Assert.AreEqual(-12.0, result, 1e-9, "-1 foot should be -12 inches");
+        }
+
+        [TestMethod]
+        public void testConversion_InvalidValue_Throws()
+        {
+            bool thrown = false;
+            try
+            {
+                QApp.Convert(double.NaN, LengthUnit.Feet, LengthUnit.Inch);
+            }
+            catch (ArgumentException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown, "NaN value should cause ArgumentException");
+        }
+
+        [TestMethod]
+        public void testConversion_InvalidUnit_Throws()
+        {
+            bool thrown = false;
+            try
+            {
+                QApp.Convert(1.0, (LengthUnit)999, LengthUnit.Feet);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown, "Invalid unit should cause ArgumentOutOfRangeException");
+        }
     }
 }
+

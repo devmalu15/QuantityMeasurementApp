@@ -18,6 +18,15 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
 
         public double ToFeet() => _value * _unit.ToFeetFactor();
 
+        public QuantityLength ConvertTo(LengthUnit target)
+        {
+            if (!Enum.IsDefined(typeof(LengthUnit), target))
+                throw new ArgumentOutOfRangeException(nameof(target));
+            double feet = ToFeet();
+            double valueInTarget = feet / target.ToFeetFactor();
+            return new QuantityLength(valueInTarget, target);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj)) return true;

@@ -28,5 +28,26 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
             var q2 = new QuantityLength(second, unit2);
             return AreEqual(q1, q2);
         }
+
+        public double Convert(double value, LengthUnit source, LengthUnit target)
+        {
+            if (double.IsNaN(value) || double.IsInfinity(value))
+                throw new ArgumentException("Value must be finite", nameof(value));
+            if (!Enum.IsDefined(typeof(LengthUnit), source))
+                throw new ArgumentOutOfRangeException(nameof(source));
+            if (!Enum.IsDefined(typeof(LengthUnit), target))
+                throw new ArgumentOutOfRangeException(nameof(target));
+
+            double feet = value * source.ToFeetFactor();
+            double result = feet / target.ToFeetFactor();
+            return result;
+        }
+
+        public QuantityLength Convert(QuantityLength source, LengthUnit target)
+        {
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            double converted = Convert(source.Value, source.Unit, target);
+            return new QuantityLength(converted, target);
+        }
     }
 }

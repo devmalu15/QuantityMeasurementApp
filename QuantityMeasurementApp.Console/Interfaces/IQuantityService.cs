@@ -8,5 +8,7 @@ namespace QuantityMeasurementApp.ConsoleApp.Interfaces
         bool AreFeetEqual(double a, double b);
         bool AreInchesEqual(double a, double b);
         bool AreEqualAcrossUnits(double first, LengthUnit unit1, double second, LengthUnit unit2);
+        double Convert(double value, LengthUnit source, LengthUnit target);
+        QuantityLength Convert(QuantityLength source, LengthUnit target);
     }
 }
