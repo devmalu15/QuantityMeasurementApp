@@ -17,5 +17,9 @@ namespace QuantityMeasurementApp.ConsoleApp
         public static QuantityLength Add(QuantityLength first, QuantityLength second) => _service.Add(first, second);
         public static double Add(double first, LengthUnit unit1, double second, LengthUnit unit2, LengthUnit target)
             => _service.Add(first, unit1, second, unit2, target);
+        public static QuantityLength Add(QuantityLength first, QuantityLength second, LengthUnit? targetUnit)
+            => _service.Add(first, second, targetUnit);
+        public static double Add(double first, LengthUnit unit1, double second, LengthUnit unit2, LengthUnit? targetUnit, LengthUnit? resultUnit)
+            => _service.Add(first, unit1, second, unit2, targetUnit, resultUnit);
     }
 }

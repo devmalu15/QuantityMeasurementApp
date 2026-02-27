@@ -80,5 +80,44 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
             double resultInTarget = sumInFeet / target.ToFeetFactor();
             return resultInTarget;
         }
+
+        public QuantityLength Add(QuantityLength first, QuantityLength second, LengthUnit? targetUnit)
+        {
+            if (first is null) throw new ArgumentNullException(nameof(first));
+            if (second is null) throw new ArgumentNullException(nameof(second));
+            if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
+            if (!Enum.IsDefined(typeof(LengthUnit), targetUnit.Value))
+                throw new ArgumentOutOfRangeException(nameof(targetUnit));
+
+            double firstInFeet = first.Value * first.Unit.ToFeetFactor();
+            double secondInFeet = second.Value * second.Unit.ToFeetFactor();
+            double sumInFeet = firstInFeet + secondInFeet;
+            double resultInTargetUnit = sumInFeet / targetUnit.Value.ToFeetFactor();
+            return new QuantityLength(resultInTargetUnit, targetUnit.Value);
+        }
+
+        public double Add(double first, LengthUnit unit1, double second, LengthUnit unit2, LengthUnit? targetUnit, LengthUnit? resultUnit)
+        {
+            if (double.IsNaN(first) || double.IsInfinity(first))
+                throw new ArgumentException("First value must be finite", nameof(first));
+            if (double.IsNaN(second) || double.IsInfinity(second))
+                throw new ArgumentException("Second value must be finite", nameof(second));
+            if (!Enum.IsDefined(typeof(LengthUnit), unit1))
+                throw new ArgumentOutOfRangeException(nameof(unit1));
+            if (!Enum.IsDefined(typeof(LengthUnit), unit2))
+                throw new ArgumentOutOfRangeException(nameof(unit2));
+            if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
+            if (resultUnit is null) throw new ArgumentNullException(nameof(resultUnit));
+            if (!Enum.IsDefined(typeof(LengthUnit), targetUnit.Value))
+                throw new ArgumentOutOfRangeException(nameof(targetUnit));
+            if (!Enum.IsDefined(typeof(LengthUnit), resultUnit.Value))
+                throw new ArgumentOutOfRangeException(nameof(resultUnit));
+
+            double firstInFeet = first * unit1.ToFeetFactor();
+            double secondInFeet = second * unit2.ToFeetFactor();
+            double sumInFeet = firstInFeet + secondInFeet;
+            double resultInTargetUnit = sumInFeet / targetUnit.Value.ToFeetFactor();
+            return resultInTargetUnit;
+        }
     }
 }

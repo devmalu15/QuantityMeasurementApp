@@ -392,6 +392,187 @@ namespace QuantityMeasurementApp.Tests
             Assert.AreEqual(2.0, result.Value, 1e-9, "1 yd + 36 in should be 2 yd");
             Assert.AreEqual(LengthUnit.Yard, result.Unit);
         }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_Feet()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(12.0, LengthUnit.Inch);
+            var result = QApp.Add(q1, q2, LengthUnit.Feet);
+            Assert.AreEqual(2.0, result.Value, 1e-9, "1 ft + 12 in in feet should be 2 ft");
+            Assert.AreEqual(LengthUnit.Feet, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_Inches()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(12.0, LengthUnit.Inch);
+            var result = QApp.Add(q1, q2, LengthUnit.Inch);
+            Assert.AreEqual(24.0, result.Value, 1e-9, "1 ft + 12 in in inches should be 24 in");
+            Assert.AreEqual(LengthUnit.Inch, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_Yards()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(12.0, LengthUnit.Inch);
+            var result = QApp.Add(q1, q2, LengthUnit.Yard);
+            Assert.AreEqual(0.66666666, result.Value, 1e-7, "1 ft + 12 in in yards should be ~0.667 yd");
+            Assert.AreEqual(LengthUnit.Yard, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_Centimeters()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Inch);
+            var q2 = new QuantityLength(1.0, LengthUnit.Inch);
+            var result = QApp.Add(q1, q2, LengthUnit.Centimeter);
+            Assert.AreEqual(5.08, result.Value, 1e-4, "1 in + 1 in in centimeters should be ~5.08 cm");
+            Assert.AreEqual(LengthUnit.Centimeter, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_SameAsFirstOperand()
+        {
+            var q1 = new QuantityLength(2.0, LengthUnit.Yard);
+            var q2 = new QuantityLength(3.0, LengthUnit.Feet);
+            var result = QApp.Add(q1, q2, LengthUnit.Yard);
+            Assert.AreEqual(3.0, result.Value, 1e-9, "2 yd + 3 ft in yards should be 3 yd");
+            Assert.AreEqual(LengthUnit.Yard, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_SameAsSecondOperand()
+        {
+            var q1 = new QuantityLength(2.0, LengthUnit.Yard);
+            var q2 = new QuantityLength(3.0, LengthUnit.Feet);
+            var result = QApp.Add(q1, q2, LengthUnit.Feet);
+            Assert.AreEqual(9.0, result.Value, 1e-9, "2 yd + 3 ft in feet should be 9 ft");
+            Assert.AreEqual(LengthUnit.Feet, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_Commutativity()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(12.0, LengthUnit.Inch);
+            var result1 = QApp.Add(q1, q2, LengthUnit.Yard);
+            var result2 = QApp.Add(q2, q1, LengthUnit.Yard);
+            Assert.AreEqual(result1.Value, result2.Value, 1e-9, "Addition should be commutative with explicit target");
+            Assert.AreEqual(result1.Unit, result2.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_WithZero()
+        {
+            var q1 = new QuantityLength(5.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(0.0, LengthUnit.Inch);
+            var result = QApp.Add(q1, q2, LengthUnit.Yard);
+            Assert.AreEqual(1.66666666, result.Value, 1e-7, "5 ft + 0 in in yards should be ~1.667 yd");
+            Assert.AreEqual(LengthUnit.Yard, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_NegativeValues()
+        {
+            var q1 = new QuantityLength(5.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(-2.0, LengthUnit.Feet);
+            var result = QApp.Add(q1, q2, LengthUnit.Inch);
+            Assert.AreEqual(36.0, result.Value, 1e-9, "5 ft + (-2 ft) in inches should be 36 in");
+            Assert.AreEqual(LengthUnit.Inch, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_NullTargetUnit()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(12.0, LengthUnit.Inch);
+            bool thrown = false;
+            try
+            {
+                QApp.Add(q1, q2, null);
+            }
+            catch (ArgumentNullException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown, "Null target unit should throw ArgumentNullException");
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_LargeToSmallScale()
+        {
+            var q1 = new QuantityLength(1000.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(500.0, LengthUnit.Feet);
+            var result = QApp.Add(q1, q2, LengthUnit.Inch);
+            Assert.AreEqual(18000.0, result.Value, 10.0, "1000 ft + 500 ft in inches should be 18000 in");
+            Assert.AreEqual(LengthUnit.Inch, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_SmallToLargeScale()
+        {
+            var q1 = new QuantityLength(12.0, LengthUnit.Inch);
+            var q2 = new QuantityLength(12.0, LengthUnit.Inch);
+            var result = QApp.Add(q1, q2, LengthUnit.Yard);
+            Assert.AreEqual(0.66666666, result.Value, 1e-7, "12 in + 12 in in yards should be ~0.667 yd");
+            Assert.AreEqual(LengthUnit.Yard, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_AllCombinations()
+        {
+            var feet = new QuantityLength(1.0, LengthUnit.Feet);
+            var inches = new QuantityLength(12.0, LengthUnit.Inch);
+            var yard = new QuantityLength(1.0, LengthUnit.Yard);
+            var cm = new QuantityLength(30.48, LengthUnit.Centimeter);
+
+            var result1 = QApp.Add(feet, inches, LengthUnit.Feet);
+            Assert.AreEqual(2.0, result1.Value, 1e-9);
+
+            var result2 = QApp.Add(yard, feet, LengthUnit.Yard);
+            Assert.AreEqual(1.33333333, result2.Value, 1e-7);
+
+            var result3 = QApp.Add(inches, cm, LengthUnit.Inch);
+            Assert.AreEqual(24.0, result3.Value, 1e-5);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_PrecisionTolerance()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Yard);
+            var q2 = new QuantityLength(12.0, LengthUnit.Inch);
+            var result = QApp.Add(q1, q2, LengthUnit.Feet);
+            double yardInFeet = 3.0;
+            double inchesInFeet = 1.0;
+            double expectedSum = yardInFeet + inchesInFeet;
+            Assert.AreEqual(expectedSum, result.Value, 1e-9, "Precision should be maintained across conversions");
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_InstanceMethod()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(12.0, LengthUnit.Inch);
+            var result = q1.Add(q2, LengthUnit.Yard);
+            Assert.AreEqual(0.66666666, result.Value, 1e-7, "Instance Add with target unit should work");
+            Assert.AreEqual(LengthUnit.Yard, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_YardsCentimeters()
+        {
+            var yards = new QuantityLength(2.0, LengthUnit.Yard);
+            var cm = new QuantityLength(30.48, LengthUnit.Centimeter);
+            var result = QApp.Add(yards, cm, LengthUnit.Centimeter);
+            double yardsInFeet = 6.0;
+            double yardsInCm = yardsInFeet / (0.393701 / 12.0);
+            double expectedSum = yardsInCm + 30.48;
+            Assert.IsTrue(Math.Abs(result.Value - expectedSum) < 1.0, "Yards + cm in centimeters should be accurate");
+            Assert.AreEqual(LengthUnit.Centimeter, result.Unit);
+        }
     }
 }
 

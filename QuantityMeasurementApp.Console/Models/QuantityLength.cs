@@ -37,6 +37,20 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
             return new QuantityLength(resultInThisUnit, _unit);
         }
 
+        public QuantityLength Add(QuantityLength other, LengthUnit? targetUnit)
+        {
+            if (other is null) throw new ArgumentNullException(nameof(other));
+            if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
+            if (!Enum.IsDefined(typeof(LengthUnit), targetUnit.Value))
+                throw new ArgumentOutOfRangeException(nameof(targetUnit));
+
+            double thisInFeet = ToFeet();
+            double otherInFeet = other.Value * other.Unit.ToFeetFactor();
+            double sumInFeet = thisInFeet + otherInFeet;
+            double resultInTargetUnit = sumInFeet / targetUnit.Value.ToFeetFactor();
+            return new QuantityLength(resultInTargetUnit, targetUnit.Value);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj)) return true;

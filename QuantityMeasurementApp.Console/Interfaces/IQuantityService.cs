@@ -12,5 +12,7 @@ namespace QuantityMeasurementApp.ConsoleApp.Interfaces
         QuantityLength Convert(QuantityLength source, LengthUnit target);
         QuantityLength Add(QuantityLength first, QuantityLength second);
         double Add(double first, LengthUnit unit1, double second, LengthUnit unit2, LengthUnit target);
+        QuantityLength Add(QuantityLength first, QuantityLength second, LengthUnit? targetUnit);
+        double Add(double first, LengthUnit unit1, double second, LengthUnit unit2, LengthUnit? targetUnit, LengthUnit? resultUnit);
     }
 }
