@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-// alias the class to avoid confusion with namespace
 using QApp = QuantityMeasurementApp.ConsoleApp.QuantityMeasurementApp;
+using QuantityMeasurementApp.ConsoleApp.Models;
 
 namespace QuantityMeasurementApp.Tests
 {
@@ -25,14 +25,14 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void testEquality_SameReference()
         {
-            var f = new QApp.Feet(5.0);
+            var f = new Feet(5.0);
             Assert.IsTrue(f.Equals(f), "Object should be equal to itself (reflexive)");
         }
 
         [TestMethod]
         public void testEquality_NullComparison()
         {
-            var f = new QApp.Feet(3.0);
+            var f = new Feet(3.0);
             Assert.IsFalse(f.Equals(null), "Comparison with null should return false");
         }
 
@@ -40,7 +40,7 @@ namespace QuantityMeasurementApp.Tests
         public void testEquality_NonNumericInput()
         {
             // since the class only accepts doubles, comparing to a non-Feet object should be false
-            var f = new QApp.Feet(2.0);
+            var f = new Feet(2.0);
             Assert.IsFalse(f.Equals("not a feet"), "Comparison against different type should return false");
         }
 
@@ -62,22 +62,54 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void testInchesEquality_SameReference()
         {
-            var i = new QApp.Inches(4.0);
+            var i = new Inches(4.0);
             Assert.IsTrue(i.Equals(i), "Inches object should be equal to itself (reflexive)");
         }
 
         [TestMethod]
         public void testInchesEquality_NullComparison()
         {
-            var i = new QApp.Inches(6.0);
+            var i = new Inches(6.0);
             Assert.IsFalse(i.Equals(null), "Comparison with null should return false");
         }
 
         [TestMethod]
         public void testInchesEquality_NonNumericInput()
         {
-            var i = new QApp.Inches(2.0);
+            var i = new Inches(2.0);
             Assert.IsFalse(i.Equals(123), "Comparison against different type (int) should return false");
+        }
+
+        // ----- Cross-unit tests (UC3) -----
+        [TestMethod]
+        public void testEquality_FeetToInch_EquivalentValue()
+        {
+            // 1 foot == 12 inches
+            bool result = QApp.AreEqualAcrossUnits(1.0, LengthUnit.Feet, 12.0, LengthUnit.Inch);
+            Assert.IsTrue(result, "1.0 ft should equal 12.0 inch");
+        }
+
+        [TestMethod]
+        public void testEquality_InchToFeet_EquivalentValue_Symmetric()
+        {
+            bool a = QApp.AreEqualAcrossUnits(12.0, LengthUnit.Inch, 1.0, LengthUnit.Feet);
+            bool b = QApp.AreEqualAcrossUnits(1.0, LengthUnit.Feet, 12.0, LengthUnit.Inch);
+            Assert.IsTrue(a && b, "Symmetric cross-unit equality must hold");
+        }
+
+        [TestMethod]
+        public void testEquality_InvalidUnit_Throws()
+        {
+            bool thrown = false;
+            try
+            {
+                QApp.AreEqualAcrossUnits(1.0, (LengthUnit)999, 1.0, LengthUnit.Feet);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown, "Expected ArgumentOutOfRangeException for invalid unit");
         }
     }
 }

@@ -7,6 +7,7 @@ namespace QuantityMeasurementApp.ConsoleApp
 		private static void Main(string[] args)
 		{
 			// Hard-coded demonstrations per UC2
+
 			double hardInchA = 1.0, hardInchB = 1.0;
 			bool inchesEqual = QuantityMeasurementApp.AreInchesEqual(hardInchA, hardInchB);
 			Console.WriteLine($"Input: {hardInchA} inch and {hardInchB} inch");
@@ -16,6 +17,11 @@ namespace QuantityMeasurementApp.ConsoleApp
 			bool feetEqual = QuantityMeasurementApp.AreFeetEqual(hardFeetA, hardFeetB);
 			Console.WriteLine($"Input: {hardFeetA} ft and {hardFeetB} ft");
 			Console.WriteLine($"Output: Equal ({feetEqual.ToString().ToLowerInvariant()})");
+
+			// Cross-unit example
+			bool cross = QuantityMeasurementApp.AreEqualAcrossUnits(1.0, Models.LengthUnit.Feet, 12.0, Models.LengthUnit.Inch);
+			Console.WriteLine($"Input: Quantity(1.0, \"feet\") and Quantity(12.0, \"inches\")");
+			Console.WriteLine($"Output: Equal ({cross.ToString().ToLowerInvariant()})");
 
 			// simple interactive demonstration for feet (optional)
 			Console.WriteLine("\nInteractive check — Enter first measurement in feet:");
