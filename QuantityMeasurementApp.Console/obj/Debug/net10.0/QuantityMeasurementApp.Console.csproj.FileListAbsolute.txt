@@ -12,3 +12,4 @@ C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Co
 C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\QuantityMeasurementApp.Console.pdb
 C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\QuantityMeasurementApp.Console.genruntimeconfig.cache
 C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\ref\QuantityMeasurementApp.Console.dll
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Console\obj\Debug\net10.0\QuantityMeasurementApp.Console.sourcelink.json

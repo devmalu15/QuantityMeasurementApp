@@ -272,3 +272,4 @@ C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Te
 C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.pdb
 C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.genruntimeconfig.cache
 C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\ref\QuantityMeasurementApp.Tests.dll
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.sourcelink.json

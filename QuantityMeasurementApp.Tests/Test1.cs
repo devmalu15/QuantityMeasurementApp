@@ -43,5 +43,41 @@ namespace QuantityMeasurementApp.Tests
             var f = new QApp.Feet(2.0);
             Assert.IsFalse(f.Equals("not a feet"), "Comparison against different type should return false");
         }
+
+        // ----- Inches tests (UC2) -----
+        [TestMethod]
+        public void testInchesEquality_SameValue()
+        {
+            bool result = QApp.AreInchesEqual(1.0, 1.0);
+            Assert.IsTrue(result, "1.0 inch should equal 1.0 inch");
+        }
+
+        [TestMethod]
+        public void testInchesEquality_DifferentValue()
+        {
+            bool result = QApp.AreInchesEqual(1.0, 2.0);
+            Assert.IsFalse(result, "1.0 inch should not equal 2.0 inch");
+        }
+
+        [TestMethod]
+        public void testInchesEquality_SameReference()
+        {
+            var i = new QApp.Inches(4.0);
+            Assert.IsTrue(i.Equals(i), "Inches object should be equal to itself (reflexive)");
+        }
+
+        [TestMethod]
+        public void testInchesEquality_NullComparison()
+        {
+            var i = new QApp.Inches(6.0);
+            Assert.IsFalse(i.Equals(null), "Comparison with null should return false");
+        }
+
+        [TestMethod]
+        public void testInchesEquality_NonNumericInput()
+        {
+            var i = new QApp.Inches(2.0);
+            Assert.IsFalse(i.Equals(123), "Comparison against different type (int) should return false");
+        }
     }
 }
