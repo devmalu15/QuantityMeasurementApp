@@ -14,5 +14,8 @@ namespace QuantityMeasurementApp.ConsoleApp
             => _service.AreEqualAcrossUnits(first, unit1, second, unit2);
         public static double Convert(double value, LengthUnit source, LengthUnit target) => _service.Convert(value, source, target);
         public static QuantityLength Convert(QuantityLength source, LengthUnit target) => _service.Convert(source, target);
+        public static QuantityLength Add(QuantityLength first, QuantityLength second) => _service.Add(first, second);
+        public static double Add(double first, LengthUnit unit1, double second, LengthUnit unit2, LengthUnit target)
+            => _service.Add(first, unit1, second, unit2, target);
     }
 }

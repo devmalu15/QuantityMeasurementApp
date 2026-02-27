@@ -49,5 +49,36 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
             double converted = Convert(source.Value, source.Unit, target);
             return new QuantityLength(converted, target);
         }
+
+        public QuantityLength Add(QuantityLength first, QuantityLength second)
+        {
+            if (first is null) throw new ArgumentNullException(nameof(first));
+            if (second is null) throw new ArgumentNullException(nameof(second));
+            double firstInFeet = first.Value * first.Unit.ToFeetFactor();
+            double secondInFeet = second.Value * second.Unit.ToFeetFactor();
+            double sumInFeet = firstInFeet + secondInFeet;
+            double resultInFirstUnit = sumInFeet / first.Unit.ToFeetFactor();
+            return new QuantityLength(resultInFirstUnit, first.Unit);
+        }
+
+        public double Add(double first, LengthUnit unit1, double second, LengthUnit unit2, LengthUnit target)
+        {
+            if (double.IsNaN(first) || double.IsInfinity(first))
+                throw new ArgumentException("First value must be finite", nameof(first));
+            if (double.IsNaN(second) || double.IsInfinity(second))
+                throw new ArgumentException("Second value must be finite", nameof(second));
+            if (!Enum.IsDefined(typeof(LengthUnit), unit1))
+                throw new ArgumentOutOfRangeException(nameof(unit1));
+            if (!Enum.IsDefined(typeof(LengthUnit), unit2))
+                throw new ArgumentOutOfRangeException(nameof(unit2));
+            if (!Enum.IsDefined(typeof(LengthUnit), target))
+                throw new ArgumentOutOfRangeException(nameof(target));
+
+            double firstInFeet = first * unit1.ToFeetFactor();
+            double secondInFeet = second * unit2.ToFeetFactor();
+            double sumInFeet = firstInFeet + secondInFeet;
+            double resultInTarget = sumInFeet / target.ToFeetFactor();
+            return resultInTarget;
+        }
     }
 }

@@ -259,6 +259,139 @@ namespace QuantityMeasurementApp.Tests
             }
             Assert.IsTrue(thrown, "Invalid unit should cause ArgumentOutOfRangeException");
         }
+
+        [TestMethod]
+        public void testAddition_SameUnit_FeetPlusFeet()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(2.0, LengthUnit.Feet);
+            var result = QApp.Add(q1, q2);
+            Assert.AreEqual(3.0, result.Value, 1e-9, "1 ft + 2 ft should be 3 ft");
+            Assert.AreEqual(LengthUnit.Feet, result.Unit, "Result should be in feet");
+        }
+
+        [TestMethod]
+        public void testAddition_SameUnit_InchPlusInch()
+        {
+            var q1 = new QuantityLength(6.0, LengthUnit.Inch);
+            var q2 = new QuantityLength(6.0, LengthUnit.Inch);
+            var result = QApp.Add(q1, q2);
+            Assert.AreEqual(12.0, result.Value, 1e-9, "6 in + 6 in should be 12 in");
+            Assert.AreEqual(LengthUnit.Inch, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_CrossUnit_FeetPlusInches()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(12.0, LengthUnit.Inch);
+            var result = QApp.Add(q1, q2);
+            Assert.AreEqual(2.0, result.Value, 1e-9, "1 ft + 12 in should be 2 ft");
+            Assert.AreEqual(LengthUnit.Feet, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_CrossUnit_InchPlusFeet()
+        {
+            var q1 = new QuantityLength(12.0, LengthUnit.Inch);
+            var q2 = new QuantityLength(1.0, LengthUnit.Feet);
+            var result = QApp.Add(q1, q2);
+            Assert.AreEqual(24.0, result.Value, 1e-9, "12 in + 1 ft should be 24 in");
+            Assert.AreEqual(LengthUnit.Inch, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_CrossUnit_YardPlusFeet()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Yard);
+            var q2 = new QuantityLength(3.0, LengthUnit.Feet);
+            var result = QApp.Add(q1, q2);
+            Assert.AreEqual(2.0, result.Value, 1e-9, "1 yd + 3 ft should be 2 yd");
+            Assert.AreEqual(LengthUnit.Yard, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_CrossUnit_CentimeterPlusInch()
+        {
+            var q1 = new QuantityLength(2.54, LengthUnit.Centimeter);
+            var q2 = new QuantityLength(1.0, LengthUnit.Inch);
+            var result = QApp.Add(q1, q2);
+            Assert.AreEqual(5.08, result.Value, 1e-4, "2.54 cm + 1 in should be ~5.08 cm");
+            Assert.AreEqual(LengthUnit.Centimeter, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_WithZero()
+        {
+            var q1 = new QuantityLength(5.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(0.0, LengthUnit.Inch);
+            var result = QApp.Add(q1, q2);
+            Assert.AreEqual(5.0, result.Value, 1e-9, "5 ft + 0 in should be 5 ft");
+            Assert.AreEqual(LengthUnit.Feet, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_NegativeValues()
+        {
+            var q1 = new QuantityLength(5.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(-2.0, LengthUnit.Feet);
+            var result = QApp.Add(q1, q2);
+            Assert.AreEqual(3.0, result.Value, 1e-9, "5 ft + (-2 ft) should be 3 ft");
+            Assert.AreEqual(LengthUnit.Feet, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_NullOperand_Throws()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Feet);
+            bool thrown = false;
+            try
+            {
+                QApp.Add(q1, null);
+            }
+            catch (ArgumentNullException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown, "Null operand should throw ArgumentNullException");
+        }
+
+        [TestMethod]
+        public void testAddition_LargeValues()
+        {
+            var q1 = new QuantityLength(1e6, LengthUnit.Feet);
+            var q2 = new QuantityLength(1e6, LengthUnit.Feet);
+            var result = QApp.Add(q1, q2);
+            Assert.AreEqual(2e6, result.Value, 1e3, "Large value addition should work");
+            Assert.AreEqual(LengthUnit.Feet, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_SmallValues()
+        {
+            var q1 = new QuantityLength(0.001, LengthUnit.Feet);
+            var q2 = new QuantityLength(0.002, LengthUnit.Feet);
+            var result = QApp.Add(q1, q2);
+            Assert.AreEqual(0.003, result.Value, 1e-9, "Small value addition should work");
+            Assert.AreEqual(LengthUnit.Feet, result.Unit);
+        }
+
+        [TestMethod]
+        public void testAddition_StaticMethodFeetPlusInches()
+        {
+            double result = QApp.Add(1.0, LengthUnit.Feet, 12.0, LengthUnit.Inch, LengthUnit.Feet);
+            Assert.AreEqual(2.0, result, 1e-9, "Static add: 1 ft + 12 in should be 2 ft");
+        }
+
+        [TestMethod]
+        public void testAddition_YardPlusInchesInYards()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Yard);
+            var q2 = new QuantityLength(36.0, LengthUnit.Inch);
+            var result = QApp.Add(q1, q2);
+            Assert.AreEqual(2.0, result.Value, 1e-9, "1 yd + 36 in should be 2 yd");
+            Assert.AreEqual(LengthUnit.Yard, result.Unit);
+        }
     }
 }
 

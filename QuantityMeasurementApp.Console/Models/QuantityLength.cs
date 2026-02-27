@@ -27,6 +27,16 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
             return new QuantityLength(valueInTarget, target);
         }
 
+        public QuantityLength Add(QuantityLength other)
+        {
+            if (other is null) throw new ArgumentNullException(nameof(other));
+            double thisInFeet = ToFeet();
+            double otherInFeet = other.Value * other.Unit.ToFeetFactor();
+            double sumInFeet = thisInFeet + otherInFeet;
+            double resultInThisUnit = sumInFeet / _unit.ToFeetFactor();
+            return new QuantityLength(resultInThisUnit, _unit);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj)) return true;
