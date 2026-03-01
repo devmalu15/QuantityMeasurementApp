@@ -7,6 +7,7 @@ namespace QuantityMeasurementApp.ConsoleApp
 	{
 		private static void Main(string[] args)
 		{
+			// backward-compatible hard-coded checks
 			double hardInchA = 1.0, hardInchB = 1.0;
 			bool inchesEqual = QuantityMeasurementApp.AreInchesEqual(hardInchA, hardInchB);
 			Console.WriteLine($"Input: {hardInchA} inch and {hardInchB} inch");
@@ -17,9 +18,11 @@ namespace QuantityMeasurementApp.ConsoleApp
 			Console.WriteLine($"Input: {hardFeetA} ft and {hardFeetB} ft");
 			Console.WriteLine($"Output: Equal ({feetEqual.ToString().ToLowerInvariant()})");
 
-			bool cross = QuantityMeasurementApp.AreEqualAcrossUnits(1.0, Models.LengthUnit.Feet, 12.0, Models.LengthUnit.Inch);
+			// generic comparison across units
+			bool cross = QuantityMeasurementApp.AreEqual(1.0, LengthUnit.Feet, 12.0, LengthUnit.Inch);
 			Console.WriteLine($"Input: Quantity(1.0, \"feet\") and Quantity(12.0, \"inches\")");
 			Console.WriteLine($"Output: Equal ({cross.ToString().ToLowerInvariant()})");
+
 			Console.WriteLine("\nInteractive check — Enter first measurement in feet:");
 			string input1 = Console.ReadLine();
 			Console.WriteLine("Enter second measurement in feet:");
@@ -28,7 +31,7 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (double.TryParse(input1, out double first) &&
 				double.TryParse(input2, out double second))
 			{
-				bool equal = QuantityMeasurementApp.AreFeetEqual(first, second);
+				bool equal = QuantityMeasurementApp.AreEqual(first, LengthUnit.Feet, second, LengthUnit.Feet);
 				Console.WriteLine($"Input: {first} ft and {second} ft");
 				Console.WriteLine($"Output: Equal ({equal.ToString().ToLowerInvariant()})");
 			}
