@@ -776,6 +776,105 @@ namespace QuantityMeasurementApp.Tests
             var w = new Quantity<WeightUnit>(1.0, WeightUnit.Kilogram);
             Assert.IsFalse(v.Equals((object)w));
         }
+
+        // UC12 subtraction and division tests
+        [TestMethod]
+        public void testSubtraction_Length_SameUnit()
+        {
+            var q1 = new QuantityLength(5.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(2.0, LengthUnit.Feet);
+            var result = QApp.Subtract(q1, q2);
+            Assert.AreEqual(3.0, result.Value, 1e-9);
+            Assert.AreEqual(LengthUnit.Feet, result.Unit);
+        }
+
+        [TestMethod]
+        public void testSubtraction_Length_CrossUnit()
+        {
+            var q1 = new QuantityLength(2.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(12.0, LengthUnit.Inch);
+            var result = QApp.Subtract(q1, q2);
+            Assert.AreEqual(1.0, result.Value, 1e-9);
+            Assert.AreEqual(LengthUnit.Feet, result.Unit);
+        }
+
+        [TestMethod]
+        public void testSubtraction_StaticPrimitive_Length()
+        {
+            double result = QApp.Subtract(2.0, LengthUnit.Feet, 12.0, LengthUnit.Inch, LengthUnit.Inch);
+            Assert.AreEqual(12.0, result, 1e-9);
+        }
+
+        [TestMethod]
+        public void testDivision_Length_SameUnit()
+        {
+            var q1 = new QuantityLength(6.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(2.0, LengthUnit.Feet);
+            double result = QApp.Divide(q1, q2);
+            Assert.AreEqual(3.0, result, 1e-9);
+        }
+
+        [TestMethod]
+        public void testDivision_Length_CrossUnit()
+        {
+            double result = QApp.Divide(1.0, LengthUnit.Yard, 3.0, LengthUnit.Feet);
+            Assert.AreEqual(1.0, result, 1e-9);
+        }
+
+        [TestMethod]
+        public void testDivision_DivideByZero_Length_Throws()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(0.0, LengthUnit.Inch);
+            bool thrown = false;
+            try
+            {
+                QApp.Divide(q1, q2);
+            }
+            catch (ArithmeticException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown, "Expected ArithmeticException when dividing by zero quantity");
+        }
+
+        [TestMethod]
+        public void testSubtraction_Weight_Primitive()
+        {
+            double result = QApp.Subtract(2.0, WeightUnit.Kilogram, 500.0, WeightUnit.Gram, WeightUnit.Kilogram);
+            Assert.AreEqual(1.5, result, 1e-9);
+        }
+
+        [TestMethod]
+        public void testDivision_Weight_Primitive()
+        {
+            double result = QApp.Divide(2.0, WeightUnit.Kilogram, 500.0, WeightUnit.Gram);
+            Assert.AreEqual(4.0, result, 1e-9);
+        }
+
+        [TestMethod]
+        public void testSubtraction_Volume_Primitive()
+        {
+            double result = QApp.Subtract(2.0, VolumeUnit.Litre, 500.0, VolumeUnit.Millilitre, VolumeUnit.Litre);
+            Assert.AreEqual(1.5, result, 1e-9);
+        }
+
+        [TestMethod]
+        public void testDivision_Volume_Primitive_DivideByZero_Throws()
+        {
+            var v1 = new Quantity<VolumeUnit>(1.0, VolumeUnit.Litre);
+            var v2 = new Quantity<VolumeUnit>(0.0, VolumeUnit.Millilitre);
+            bool thrown = false;
+            try
+            {
+                QApp.Divide(v1, v2);
+            }
+            catch (ArithmeticException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown, "Expected ArithmeticException when dividing by zero quantity");
+        }
     }
 }
 

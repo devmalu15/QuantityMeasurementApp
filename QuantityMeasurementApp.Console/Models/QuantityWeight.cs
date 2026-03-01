@@ -56,6 +56,39 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
             return new QuantityWeight(result, targetUnit.Value);
         }
 
+            public QuantityWeight Subtract(QuantityWeight other)
+            {
+                if (other is null) throw new ArgumentNullException(nameof(other));
+                double thisInKg = _unit.ConvertToBaseUnit(_value);
+                double otherInKg = other.Unit.ConvertToBaseUnit(other.Value);
+                double diffKg = thisInKg - otherInKg;
+                double resultInThisUnit = _unit.ConvertFromBaseUnit(diffKg);
+                return new QuantityWeight(resultInThisUnit, _unit);
+            }
+
+            public QuantityWeight Subtract(QuantityWeight other, WeightUnit? targetUnit)
+            {
+                if (other is null) throw new ArgumentNullException(nameof(other));
+                if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
+                if (!Enum.IsDefined(typeof(WeightUnit), targetUnit.Value))
+                    throw new ArgumentOutOfRangeException(nameof(targetUnit));
+
+                double thisInKg = _unit.ConvertToBaseUnit(_value);
+                double otherInKg = other.Unit.ConvertToBaseUnit(other.Value);
+                double diffKg = thisInKg - otherInKg;
+                double result = targetUnit.Value.ConvertFromBaseUnit(diffKg);
+                return new QuantityWeight(result, targetUnit.Value);
+            }
+
+            public double Divide(QuantityWeight other)
+            {
+                if (other is null) throw new ArgumentNullException(nameof(other));
+                double otherInKg = other.Unit.ConvertToBaseUnit(other.Value);
+                if (otherInKg == 0.0) throw new ArithmeticException("Cannot divide by zero quantity");
+                double thisInKg = _unit.ConvertToBaseUnit(_value);
+                return thisInKg / otherInKg;
+            }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj)) return true;

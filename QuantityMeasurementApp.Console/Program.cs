@@ -62,7 +62,9 @@ namespace QuantityMeasurementApp.ConsoleApp
 				Console.WriteLine("1. Compare two lengths (Equality)");
 				Console.WriteLine("2. Convert length unit");
 				Console.WriteLine("3. Add two lengths");
-				Console.WriteLine("4. Back to main menu");
+				Console.WriteLine("4. Subtract two lengths");
+				Console.WriteLine("5. Divide two lengths");
+				Console.WriteLine("6. Back to main menu");
 				Console.Write("Select operation: ");
 
 				string choice = Console.ReadLine();
@@ -78,6 +80,12 @@ namespace QuantityMeasurementApp.ConsoleApp
 						AddLengths();
 						break;
 					case "4":
+						SubtractLengths();
+						break;
+					case "5":
+						DivideLengths();
+						break;
+					case "6":
 						back = true;
 						break;
 					default:
@@ -96,7 +104,9 @@ namespace QuantityMeasurementApp.ConsoleApp
 				Console.WriteLine("1. Compare two weights (Equality)");
 				Console.WriteLine("2. Convert weight unit");
 				Console.WriteLine("3. Add two weights");
-				Console.WriteLine("4. Back to main menu");
+				Console.WriteLine("4. Subtract two weights");
+				Console.WriteLine("5. Divide two weights");
+				Console.WriteLine("6. Back to main menu");
 				Console.Write("Select operation: ");
 
 				string choice = Console.ReadLine();
@@ -112,6 +122,12 @@ namespace QuantityMeasurementApp.ConsoleApp
 						AddWeights();
 						break;
 					case "4":
+						SubtractWeights();
+						break;
+					case "5":
+						DivideWeights();
+						break;
+					case "6":
 						back = true;
 						break;
 					default:
@@ -130,7 +146,9 @@ namespace QuantityMeasurementApp.ConsoleApp
 				Console.WriteLine("1. Compare two volumes (Equality)");
 				Console.WriteLine("2. Convert volume unit");
 				Console.WriteLine("3. Add two volumes");
-				Console.WriteLine("4. Back to main menu");
+				Console.WriteLine("4. Subtract two volumes");
+				Console.WriteLine("5. Divide two volumes");
+				Console.WriteLine("6. Back to main menu");
 				Console.Write("Select operation: ");
 
 				string choice = Console.ReadLine();
@@ -146,6 +164,12 @@ namespace QuantityMeasurementApp.ConsoleApp
 						AddVolumes();
 						break;
 					case "4":
+						SubtractVolumes();
+						break;
+					case "5":
+						DivideVolumes();
+						break;
+					case "6":
 						back = true;
 						break;
 					default:
@@ -332,6 +356,135 @@ namespace QuantityMeasurementApp.ConsoleApp
 			var v2 = new Quantity<VolumeUnit>(val2, unit2);
 			var result = v1.Add(v2, resultUnit);
 			Console.WriteLine($"\n{val1} {unit1} + {val2} {unit2} = {result.Value} {resultUnit}");
+		}
+
+		// ===== SUBTRACT HANDLERS =====
+		private static void SubtractLengths()
+		{
+			Console.WriteLine("\nAvailable length units: Feet, Inch, Yard, Centimeter");
+			Console.Write("Enter first value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter first unit (Feet/Inch/Yard/Centimeter): ");
+			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+
+			Console.Write("Enter second value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter second unit (Feet/Inch/Yard/Centimeter): ");
+			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+
+			Console.Write("Enter result unit (Feet/Inch/Yard/Centimeter): ");
+			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var resultUnit)) { Console.WriteLine("Invalid unit."); return; }
+
+			double result = QApp.Subtract(val1, unit1, val2, unit2, resultUnit);
+			Console.WriteLine($"\n{val1} {unit1} - {val2} {unit2} = {result} {resultUnit}");
+		}
+
+		private static void SubtractWeights()
+		{
+			Console.WriteLine("\nAvailable weight units: Kilogram, Gram, Pound");
+			Console.Write("Enter first value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter first unit (Kilogram/Gram/Pound): ");
+			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+
+			Console.Write("Enter second value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter second unit (Kilogram/Gram/Pound): ");
+			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+
+			Console.Write("Enter result unit (Kilogram/Gram/Pound): ");
+			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var resultUnit)) { Console.WriteLine("Invalid unit."); return; }
+
+			double result = QApp.Subtract(val1, unit1, val2, unit2, resultUnit);
+			Console.WriteLine($"\n{val1} {unit1} - {val2} {unit2} = {result} {resultUnit}");
+		}
+
+		private static void SubtractVolumes()
+		{
+			Console.WriteLine("\nAvailable volume units: Litre, Millilitre, Gallon");
+			Console.Write("Enter first value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter first unit (Litre/Millilitre/Gallon): ");
+			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+
+			Console.Write("Enter second value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter second unit (Litre/Millilitre/Gallon): ");
+			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+
+			Console.Write("Enter result unit (Litre/Millilitre/Gallon): ");
+			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var resultUnit)) { Console.WriteLine("Invalid unit."); return; }
+
+			var v1 = new Quantity<VolumeUnit>(val1, unit1);
+			var v2 = new Quantity<VolumeUnit>(val2, unit2);
+			var result = v1.Subtract(v2, resultUnit);
+			Console.WriteLine($"\n{val1} {unit1} - {val2} {unit2} = {result.Value} {resultUnit}");
+		}
+
+		// ===== DIVIDE HANDLERS =====
+		private static void DivideLengths()
+		{
+			Console.WriteLine("\nAvailable length units: Feet, Inch, Yard, Centimeter");
+			Console.Write("Enter first value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter first unit (Feet/Inch/Yard/Centimeter): ");
+			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+
+			Console.Write("Enter second value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter second unit (Feet/Inch/Yard/Centimeter): ");
+			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+
+			double result = QApp.Divide(val1, unit1, val2, unit2);
+			Console.WriteLine($"\n{val1} {unit1} / {val2} {unit2} = {result}");
+		}
+
+		private static void DivideWeights()
+		{
+			Console.WriteLine("\nAvailable weight units: Kilogram, Gram, Pound");
+			Console.Write("Enter first value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter first unit (Kilogram/Gram/Pound): ");
+			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+
+			Console.Write("Enter second value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter second unit (Kilogram/Gram/Pound): ");
+			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+
+			double result = QApp.Divide(val1, unit1, val2, unit2);
+			Console.WriteLine($"\n{val1} {unit1} / {val2} {unit2} = {result}");
+		}
+
+		private static void DivideVolumes()
+		{
+			Console.WriteLine("\nAvailable volume units: Litre, Millilitre, Gallon");
+			Console.Write("Enter first value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter first unit (Litre/Millilitre/Gallon): ");
+			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+
+			Console.Write("Enter second value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter second unit (Litre/Millilitre/Gallon): ");
+			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+
+			var v1 = new Quantity<VolumeUnit>(val1, unit1);
+			var v2 = new Quantity<VolumeUnit>(val2, unit2);
+			double result = v1.Divide(v2);
+			Console.WriteLine($"\n{val1} {unit1} / {val2} {unit2} = {result}");
 		}
 
 		// ===== DEMO =====

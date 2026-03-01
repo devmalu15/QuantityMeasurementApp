@@ -36,5 +36,55 @@ namespace QuantityMeasurementApp.ConsoleApp
             => _service.Add(first, second, targetUnit);
         public static double Add(double first, WeightUnit unit1, double second, WeightUnit unit2, WeightUnit? targetUnit, WeightUnit? resultUnit)
             => _service.Add(first, unit1, second, unit2, targetUnit, resultUnit);
+
+        // generic facade for all measurement types
+        public static Quantity<U> Subtract<U>(Quantity<U> first, Quantity<U> second) where U : struct, Enum
+            => first.Subtract(second);
+
+        public static Quantity<U> Subtract<U>(Quantity<U> first, Quantity<U> second, U? targetUnit) where U : struct, Enum
+            => first.Subtract(second, targetUnit);
+
+        public static double Divide<U>(Quantity<U> first, Quantity<U> second) where U : struct, Enum
+            => first.Divide(second);
+        
+        // Legacy/compatibility overloads for legacy wrapper types
+        public static QuantityLength Subtract(QuantityLength first, QuantityLength second)
+            => first.Subtract(second);
+
+        public static QuantityLength Subtract(QuantityLength first, QuantityLength second, LengthUnit? targetUnit)
+            => first.Subtract(second, targetUnit);
+
+        public static double Divide(QuantityLength first, QuantityLength second)
+            => first.Divide(second);
+
+        public static QuantityWeight Subtract(QuantityWeight first, QuantityWeight second)
+            => first.Subtract(second);
+
+        public static QuantityWeight Subtract(QuantityWeight first, QuantityWeight second, WeightUnit? targetUnit)
+            => first.Subtract(second, targetUnit);
+
+        public static double Divide(QuantityWeight first, QuantityWeight second)
+            => first.Divide(second);
+        
+        // Convenience overloads for primitive inputs (length)
+        public static double Subtract(double first, LengthUnit unit1, double second, LengthUnit unit2, LengthUnit target)
+            => new Quantity<LengthUnit>(first, unit1).Subtract(new Quantity<LengthUnit>(second, unit2), target).Value;
+
+        public static double Divide(double first, LengthUnit unit1, double second, LengthUnit unit2)
+            => new Quantity<LengthUnit>(first, unit1).Divide(new Quantity<LengthUnit>(second, unit2));
+
+        // Convenience overloads for primitive inputs (weight)
+        public static double Subtract(double first, WeightUnit unit1, double second, WeightUnit unit2, WeightUnit target)
+            => new Quantity<WeightUnit>(first, unit1).Subtract(new Quantity<WeightUnit>(second, unit2), target).Value;
+
+        public static double Divide(double first, WeightUnit unit1, double second, WeightUnit unit2)
+            => new Quantity<WeightUnit>(first, unit1).Divide(new Quantity<WeightUnit>(second, unit2));
+
+        // Convenience overloads for primitive inputs (volume)
+        public static double Subtract(double first, VolumeUnit unit1, double second, VolumeUnit unit2, VolumeUnit target)
+            => new Quantity<VolumeUnit>(first, unit1).Subtract(new Quantity<VolumeUnit>(second, unit2), target).Value;
+
+        public static double Divide(double first, VolumeUnit unit1, double second, VolumeUnit unit2)
+            => new Quantity<VolumeUnit>(first, unit1).Divide(new Quantity<VolumeUnit>(second, unit2));
     }
 }

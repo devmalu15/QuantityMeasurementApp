@@ -52,6 +52,36 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
             return new Quantity<U>(result, targetUnit.Value);
         }
 
+        public Quantity<U> Subtract(Quantity<U> other)
+        {
+            if (other is null) throw new ArgumentNullException(nameof(other));
+            double diffBase = ToBase() - UnitConverter<U>.ToBase(other._unit, other._value);
+            double resultInThis = UnitConverter<U>.FromBase(_unit, diffBase);
+            return new Quantity<U>(resultInThis, _unit);
+        }
+
+        public Quantity<U> Subtract(Quantity<U> other, U? targetUnit)
+        {
+            if (other is null) throw new ArgumentNullException(nameof(other));
+            if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
+            if (!Enum.IsDefined(typeof(U), targetUnit.Value))
+                throw new ArgumentOutOfRangeException(nameof(targetUnit));
+
+            double diffBase = ToBase() - UnitConverter<U>.ToBase(other._unit, other._value);
+            double result = UnitConverter<U>.FromBase(targetUnit.Value, diffBase);
+            return new Quantity<U>(result, targetUnit.Value);
+        }
+
+        public double Divide(Quantity<U> other)
+        {
+            if (other is null) throw new ArgumentNullException(nameof(other));
+            double otherBase = UnitConverter<U>.ToBase(other._unit, other._value);
+            if (otherBase == 0.0)
+                throw new ArithmeticException("Cannot divide by zero quantity");
+            double thisBase = ToBase();
+            return thisBase / otherBase;
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj)) return true;
