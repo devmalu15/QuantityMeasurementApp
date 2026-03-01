@@ -649,6 +649,58 @@ namespace QuantityMeasurementApp.Tests
             Assert.IsTrue(Math.Abs(result.Value - expectedSum) < 1.0, "Yards + cm in centimeters should be accurate");
             Assert.AreEqual(LengthUnit.Centimeter, result.Unit);
         }
+
+        // UC9 weight tests
+        [TestMethod]
+        public void testWeightEquality_KilogramToKilogram_SameValue()
+        {
+            var w1 = new QuantityWeight(1.0, WeightUnit.Kilogram);
+            var w2 = new QuantityWeight(1.0, WeightUnit.Kilogram);
+            Assert.IsTrue(w1.Equals(w2));
+        }
+
+        [TestMethod]
+        public void testWeightEquality_KilogramToGram_EquivalentValue()
+        {
+            var w1 = new QuantityWeight(1.0, WeightUnit.Kilogram);
+            var w2 = new QuantityWeight(1000.0, WeightUnit.Gram);
+            Assert.IsTrue(w1.Equals(w2));
+        }
+
+        [TestMethod]
+        public void testWeightEquality_GramToPound_EquivalentValue()
+        {
+            var w1 = new QuantityWeight(453.592, WeightUnit.Gram);
+            var w2 = new QuantityWeight(1.0, WeightUnit.Pound);
+            Assert.IsTrue(w1.Equals(w2));
+        }
+
+        [TestMethod]
+        public void testWeightConversion_PoundToKilogram()
+        {
+            var q = new QuantityWeight(2.20462, WeightUnit.Pound);
+            var converted = q.ConvertTo(WeightUnit.Kilogram);
+            Assert.AreEqual(1.0, converted.Value, 1e-5);
+            Assert.AreEqual(WeightUnit.Kilogram, converted.Unit);
+        }
+
+        [TestMethod]
+        public void testWeightAddition_CrossUnit_KilogramPlusPound()
+        {
+            var w1 = new QuantityWeight(1.0, WeightUnit.Kilogram);
+            var w2 = new QuantityWeight(1.0, WeightUnit.Pound);
+            var result = w1.Add(w2);
+            double expectedKg = 1.0 + 0.453592;
+            Assert.AreEqual(expectedKg, result.Value, 1e-6);
+            Assert.AreEqual(WeightUnit.Kilogram, result.Unit);
+        }
+
+        [TestMethod]
+        public void testWeightFacade_AddStatic()
+        {
+            double result = QApp.Add(1.0, WeightUnit.Kilogram, 1000.0, WeightUnit.Gram, WeightUnit.Kilogram);
+            Assert.AreEqual(2.0, result, 1e-9);
+        }
     }
 }
 

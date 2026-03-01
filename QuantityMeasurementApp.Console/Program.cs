@@ -43,6 +43,13 @@ namespace QuantityMeasurementApp.ConsoleApp
             Console.WriteLine($"LengthUnit.Inch.ConvertToBaseUnit(12.0) = {inchesToFeet}");
             double feetToInches = LengthUnit.Inch.ConvertFromBaseUnit(1.0);
             Console.WriteLine($"LengthUnit.Inch.ConvertFromBaseUnit(1.0) = {feetToInches}");
+
+            // UC9 weight demo
+            Console.WriteLine("\nUC9: Weight category demonstration");
+            bool eq = QuantityMeasurementApp.AreEqual(new QuantityWeight(1.0, WeightUnit.Kilogram), new QuantityWeight(1000.0, WeightUnit.Gram));
+            Console.WriteLine($"1 kg equals 1000 g? {eq}");
+            var sum = QuantityMeasurementApp.Add(new QuantityWeight(1.0, WeightUnit.Kilogram), new QuantityWeight(1.0, WeightUnit.Pound));
+            Console.WriteLine($"1 kg + 1 lb in kg = {sum.Value} {sum.Unit}");
         }
     }
 }

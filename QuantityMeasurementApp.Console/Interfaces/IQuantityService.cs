@@ -14,5 +14,16 @@ namespace QuantityMeasurementApp.ConsoleApp.Interfaces
         double Add(double first, LengthUnit unit1, double second, LengthUnit unit2, LengthUnit target);
         QuantityLength Add(QuantityLength first, QuantityLength second, LengthUnit? targetUnit);
         double Add(double first, LengthUnit unit1, double second, LengthUnit unit2, LengthUnit? targetUnit, LengthUnit? resultUnit);
+
+        // weight operations
+        bool AreEqual(QuantityWeight a, QuantityWeight b);
+        bool AreKilogramsEqual(double a, double b);
+        bool AreEqualAcrossWeightUnits(double first, WeightUnit unit1, double second, WeightUnit unit2);
+        double Convert(double value, WeightUnit source, WeightUnit target);
+        QuantityWeight Convert(QuantityWeight source, WeightUnit target);
+        QuantityWeight Add(QuantityWeight first, QuantityWeight second);
+        double Add(double first, WeightUnit unit1, double second, WeightUnit unit2, WeightUnit target);
+        QuantityWeight Add(QuantityWeight first, QuantityWeight second, WeightUnit? targetUnit);
+        double Add(double first, WeightUnit unit1, double second, WeightUnit unit2, WeightUnit? targetUnit, WeightUnit? resultUnit);
     }
 }
