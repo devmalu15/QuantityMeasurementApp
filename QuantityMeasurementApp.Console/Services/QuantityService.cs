@@ -38,8 +38,8 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
             if (!Enum.IsDefined(typeof(LengthUnit), target))
                 throw new ArgumentOutOfRangeException(nameof(target));
 
-            double feet = value * source.ToFeetFactor();
-            double result = feet / target.ToFeetFactor();
+            double feet = source.ConvertToBaseUnit(value);
+            double result = target.ConvertFromBaseUnit(feet);
             return result;
         }
 
@@ -54,10 +54,10 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
         {
             if (first is null) throw new ArgumentNullException(nameof(first));
             if (second is null) throw new ArgumentNullException(nameof(second));
-            double firstInFeet = first.Value * first.Unit.ToFeetFactor();
-            double secondInFeet = second.Value * second.Unit.ToFeetFactor();
+            double firstInFeet = first.Unit.ConvertToBaseUnit(first.Value);
+            double secondInFeet = second.Unit.ConvertToBaseUnit(second.Value);
             double sumInFeet = firstInFeet + secondInFeet;
-            double resultInFirstUnit = sumInFeet / first.Unit.ToFeetFactor();
+            double resultInFirstUnit = first.Unit.ConvertFromBaseUnit(sumInFeet);
             return new QuantityLength(resultInFirstUnit, first.Unit);
         }
 
@@ -74,10 +74,10 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
             if (!Enum.IsDefined(typeof(LengthUnit), target))
                 throw new ArgumentOutOfRangeException(nameof(target));
 
-            double firstInFeet = first * unit1.ToFeetFactor();
-            double secondInFeet = second * unit2.ToFeetFactor();
+            double firstInFeet = unit1.ConvertToBaseUnit(first);
+            double secondInFeet = unit2.ConvertToBaseUnit(second);
             double sumInFeet = firstInFeet + secondInFeet;
-            double resultInTarget = sumInFeet / target.ToFeetFactor();
+            double resultInTarget = target.ConvertFromBaseUnit(sumInFeet);
             return resultInTarget;
         }
 
@@ -89,10 +89,10 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
             if (!Enum.IsDefined(typeof(LengthUnit), targetUnit.Value))
                 throw new ArgumentOutOfRangeException(nameof(targetUnit));
 
-            double firstInFeet = first.Value * first.Unit.ToFeetFactor();
-            double secondInFeet = second.Value * second.Unit.ToFeetFactor();
+            double firstInFeet = first.Unit.ConvertToBaseUnit(first.Value);
+            double secondInFeet = second.Unit.ConvertToBaseUnit(second.Value);
             double sumInFeet = firstInFeet + secondInFeet;
-            double resultInTargetUnit = sumInFeet / targetUnit.Value.ToFeetFactor();
+            double resultInTargetUnit = targetUnit.Value.ConvertFromBaseUnit(sumInFeet);
             return new QuantityLength(resultInTargetUnit, targetUnit.Value);
         }
 
@@ -113,10 +113,10 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
             if (!Enum.IsDefined(typeof(LengthUnit), resultUnit.Value))
                 throw new ArgumentOutOfRangeException(nameof(resultUnit));
 
-            double firstInFeet = first * unit1.ToFeetFactor();
-            double secondInFeet = second * unit2.ToFeetFactor();
+            double firstInFeet = unit1.ConvertToBaseUnit(first);
+            double secondInFeet = unit2.ConvertToBaseUnit(second);
             double sumInFeet = firstInFeet + secondInFeet;
-            double resultInTargetUnit = sumInFeet / targetUnit.Value.ToFeetFactor();
+            double resultInTargetUnit = targetUnit.Value.ConvertFromBaseUnit(sumInFeet);
             return resultInTargetUnit;
         }
     }

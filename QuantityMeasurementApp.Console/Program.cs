@@ -1,4 +1,5 @@
 ﻿using System;
+using QuantityMeasurementApp.ConsoleApp.Models;
 
 namespace QuantityMeasurementApp.ConsoleApp
 {
@@ -35,6 +36,13 @@ namespace QuantityMeasurementApp.ConsoleApp
 			{
 				Console.WriteLine("Invalid numeric input. Please enter numbers.");
 			}
-		}
-	}
+
+            // UC8 demonstration: direct unit conversions
+            Console.WriteLine("\nUC8: Unit methods demonstration");
+            double inchesToFeet = LengthUnit.Inch.ConvertToBaseUnit(12.0);
+            Console.WriteLine($"LengthUnit.Inch.ConvertToBaseUnit(12.0) = {inchesToFeet}");
+            double feetToInches = LengthUnit.Inch.ConvertFromBaseUnit(1.0);
+            Console.WriteLine($"LengthUnit.Inch.ConvertFromBaseUnit(1.0) = {feetToInches}");
+        }
+    }
 }

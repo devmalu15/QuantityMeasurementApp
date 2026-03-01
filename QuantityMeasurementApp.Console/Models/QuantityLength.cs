@@ -9,6 +9,11 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
 
         public QuantityLength(double value, LengthUnit unit)
         {
+            if (double.IsNaN(value) || double.IsInfinity(value))
+                throw new ArgumentException("Value must be finite", nameof(value));
+            if (!Enum.IsDefined(typeof(LengthUnit), unit))
+                throw new ArgumentOutOfRangeException(nameof(unit));
+
             _value = value;
             _unit = unit;
         }
@@ -16,14 +21,14 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
         public double Value => _value;
         public LengthUnit Unit => _unit;
 
-        public double ToFeet() => _value * _unit.ToFeetFactor();
+        public double ToFeet() => _unit.ConvertToBaseUnit(_value);
 
         public QuantityLength ConvertTo(LengthUnit target)
         {
             if (!Enum.IsDefined(typeof(LengthUnit), target))
                 throw new ArgumentOutOfRangeException(nameof(target));
             double feet = ToFeet();
-            double valueInTarget = feet / target.ToFeetFactor();
+            double valueInTarget = target.ConvertFromBaseUnit(feet);
             return new QuantityLength(valueInTarget, target);
         }
 
@@ -31,9 +36,9 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
         {
             if (other is null) throw new ArgumentNullException(nameof(other));
             double thisInFeet = ToFeet();
-            double otherInFeet = other.Value * other.Unit.ToFeetFactor();
+            double otherInFeet = other.Unit.ConvertToBaseUnit(other.Value);
             double sumInFeet = thisInFeet + otherInFeet;
-            double resultInThisUnit = sumInFeet / _unit.ToFeetFactor();
+            double resultInThisUnit = _unit.ConvertFromBaseUnit(sumInFeet);
             return new QuantityLength(resultInThisUnit, _unit);
         }
 
@@ -45,9 +50,9 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
                 throw new ArgumentOutOfRangeException(nameof(targetUnit));
 
             double thisInFeet = ToFeet();
-            double otherInFeet = other.Value * other.Unit.ToFeetFactor();
+            double otherInFeet = other.Unit.ConvertToBaseUnit(other.Value);
             double sumInFeet = thisInFeet + otherInFeet;
-            double resultInTargetUnit = sumInFeet / targetUnit.Value.ToFeetFactor();
+            double resultInTargetUnit = targetUnit.Value.ConvertFromBaseUnit(sumInFeet);
             return new QuantityLength(resultInTargetUnit, targetUnit.Value);
         }
 

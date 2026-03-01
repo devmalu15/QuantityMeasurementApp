@@ -260,6 +260,82 @@ namespace QuantityMeasurementApp.Tests
             Assert.IsTrue(thrown, "Invalid unit should cause ArgumentOutOfRangeException");
         }
 
+        // UC8 unit enum conversion tests
+        [TestMethod]
+        public void testLengthUnitEnum_ConvertToBaseUnit()
+        {
+            Assert.AreEqual(1.0, LengthUnit.Feet.ConvertToBaseUnit(1.0), 1e-9);
+            Assert.AreEqual(1.0, LengthUnit.Inch.ConvertToBaseUnit(12.0), 1e-9);
+            Assert.AreEqual(3.0, LengthUnit.Yard.ConvertToBaseUnit(1.0), 1e-9);
+            Assert.AreEqual(1.0, LengthUnit.Centimeter.ConvertToBaseUnit(30.48), 1e-4);
+        }
+
+        [TestMethod]
+        public void testLengthUnitEnum_ConvertFromBaseUnit()
+        {
+            Assert.AreEqual(2.0, LengthUnit.Feet.ConvertFromBaseUnit(2.0), 1e-9);
+            Assert.AreEqual(12.0, LengthUnit.Inch.ConvertFromBaseUnit(1.0), 1e-9);
+            Assert.AreEqual(1.0, LengthUnit.Yard.ConvertFromBaseUnit(3.0), 1e-9);
+            Assert.AreEqual(30.48, LengthUnit.Centimeter.ConvertFromBaseUnit(1.0), 1e-4);
+        }
+
+        [TestMethod]
+        public void testQuantityLengthRefactored_Equality()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(12.0, LengthUnit.Inch);
+            Assert.IsTrue(q1.Equals(q2));
+        }
+
+        [TestMethod]
+        public void testQuantityLengthRefactored_ConvertTo()
+        {
+            var q = new QuantityLength(1.0, LengthUnit.Feet);
+            var converted = q.ConvertTo(LengthUnit.Inch);
+            Assert.AreEqual(12.0, converted.Value, 1e-9);
+            Assert.AreEqual(LengthUnit.Inch, converted.Unit);
+        }
+
+        [TestMethod]
+        public void testQuantityLengthRefactored_AddWithTargetUnit()
+        {
+            var q1 = new QuantityLength(1.0, LengthUnit.Feet);
+            var q2 = new QuantityLength(12.0, LengthUnit.Inch);
+            var result = q1.Add(q2, LengthUnit.Yard);
+            Assert.AreEqual(0.66666666, result.Value, 1e-7);
+            Assert.AreEqual(LengthUnit.Yard, result.Unit);
+        }
+
+        [TestMethod]
+        public void testQuantityLengthRefactored_NullUnit_Throws()
+        {
+            bool thrown = false;
+            try
+            {
+                var q = new QuantityLength(1.0, (LengthUnit)999);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown);
+        }
+
+        [TestMethod]
+        public void testQuantityLengthRefactored_InvalidValue_Throws()
+        {
+            bool thrown = false;
+            try
+            {
+                var q = new QuantityLength(double.NaN, LengthUnit.Feet);
+            }
+            catch (ArgumentException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown);
+        }
+
         [TestMethod]
         public void testAddition_SameUnit_FeetPlusFeet()
         {
