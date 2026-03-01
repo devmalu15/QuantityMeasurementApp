@@ -701,6 +701,81 @@ namespace QuantityMeasurementApp.Tests
             double result = QApp.Add(1.0, WeightUnit.Kilogram, 1000.0, WeightUnit.Gram, WeightUnit.Kilogram);
             Assert.AreEqual(2.0, result, 1e-9);
         }
+
+        // UC11 volume tests
+        [TestMethod]
+        public void testVolumeEquality_LitreToMillilitre_Equivalent()
+        {
+            var v1 = new Quantity<VolumeUnit>(1.0, VolumeUnit.Litre);
+            var v2 = new Quantity<VolumeUnit>(1000.0, VolumeUnit.Millilitre);
+            Assert.IsTrue(v1.Equals(v2));
+        }
+
+        [TestMethod]
+        public void testVolumeEquality_LitreToGallon_Equivalent()
+        {
+            var v1 = new Quantity<VolumeUnit>(1.0, VolumeUnit.Litre);
+            var v2 = new Quantity<VolumeUnit>(1.0 / 3.78541, VolumeUnit.Gallon);
+            // Due to floating-point rounding, check that the base values are very close
+            double v1Base = v1.Value * VolumeUnit.Litre.ToLitreFactor();
+            double v2Base = v2.Value * VolumeUnit.Gallon.ToLitreFactor();
+            Assert.AreEqual(v1Base, v2Base, 1e-9, "1 litre should equal 1/3.78541 gallons in base units");
+        }
+
+        [TestMethod]
+        public void testVolumeConversion_LitreToGallon()
+        {
+            var v = new Quantity<VolumeUnit>(1.0, VolumeUnit.Litre);
+            var conv = v.ConvertTo(VolumeUnit.Gallon);
+            Assert.AreEqual(1.0 / 3.78541, conv.Value, 1e-6, "1 litre should convert to ~0.264172 gallons");
+            Assert.AreEqual(VolumeUnit.Gallon, conv.Unit);
+        }
+
+        [TestMethod]
+        public void testVolumeConversion_MillilitreToLitre()
+        {
+            var v = new Quantity<VolumeUnit>(1000.0, VolumeUnit.Millilitre);
+            var conv = v.ConvertTo(VolumeUnit.Litre);
+            Assert.AreEqual(1.0, conv.Value, 1e-9);
+            Assert.AreEqual(VolumeUnit.Litre, conv.Unit);
+        }
+
+        [TestMethod]
+        public void testVolumeAddition_LitrePlusMillilitre()
+        {
+            var v1 = new Quantity<VolumeUnit>(1.0, VolumeUnit.Litre);
+            var v2 = new Quantity<VolumeUnit>(500.0, VolumeUnit.Millilitre);
+            var sum = v1.Add(v2);
+            Assert.AreEqual(1.5, sum.Value, 1e-9);
+            Assert.AreEqual(VolumeUnit.Litre, sum.Unit);
+        }
+
+        [TestMethod]
+        public void testVolumeAddition_ExplicitTargetUnit_Millilitre()
+        {
+            var v1 = new Quantity<VolumeUnit>(1.0, VolumeUnit.Litre);
+            var v2 = new Quantity<VolumeUnit>(1.0, VolumeUnit.Gallon);
+            var sum = v1.Add(v2, VolumeUnit.Millilitre);
+            double expected = 1.0 * 1000.0 + 3.78541 * 1000.0;
+            Assert.AreEqual(expected, sum.Value, 1e-6);
+            Assert.AreEqual(VolumeUnit.Millilitre, sum.Unit);
+        }
+
+        [TestMethod]
+        public void testVolumeCrossCategory_Incompatible_Length()
+        {
+            var v = new Quantity<VolumeUnit>(1.0, VolumeUnit.Litre);
+            var l = new Quantity<LengthUnit>(1.0, LengthUnit.Feet);
+            Assert.IsFalse(v.Equals((object)l));
+        }
+
+        [TestMethod]
+        public void testVolumeCrossCategory_Incompatible_Weight()
+        {
+            var v = new Quantity<VolumeUnit>(1.0, VolumeUnit.Litre);
+            var w = new Quantity<WeightUnit>(1.0, WeightUnit.Kilogram);
+            Assert.IsFalse(v.Equals((object)w));
+        }
     }
 }
 
