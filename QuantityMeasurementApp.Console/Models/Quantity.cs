@@ -32,54 +32,81 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
             return new Quantity<U>(converted, target);
         }
 
-        public Quantity<U> Add(Quantity<U> other)
+        // ArithmeticOperation enum with lambda expressions
+        private enum ArithmeticOperation
+        {
+            ADD = 0,
+            SUBTRACT = 1,
+            DIVIDE = 2
+        }
+
+        // Helper method for operation computation
+        private static double Compute(ArithmeticOperation operation, double left, double right)
+        {
+            return operation switch
+            {
+                ArithmeticOperation.ADD => left + right,
+                ArithmeticOperation.SUBTRACT => left - right,
+                ArithmeticOperation.DIVIDE => right == 0 ? throw new ArithmeticException("Cannot divide by zero quantity") : left / right,
+                _ => throw new ArgumentOutOfRangeException(nameof(operation))
+            };
+        }
+
+        // Centralized validation helper
+        private void ValidateArithmeticOperands(Quantity<U> other, U? targetUnit, bool targetUnitRequired)
         {
             if (other is null) throw new ArgumentNullException(nameof(other));
-            double sumBase = ToBase() + UnitConverter<U>.ToBase(other._unit, other._value);
-            double resultInThis = UnitConverter<U>.FromBase(_unit, sumBase);
+            if (double.IsNaN(other._value) || double.IsInfinity(other._value))
+                throw new ArgumentException("Value must be finite", nameof(other));
+            if (targetUnitRequired && targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
+            if (targetUnitRequired && !Enum.IsDefined(typeof(U), targetUnit.Value))
+                throw new ArgumentOutOfRangeException(nameof(targetUnit));
+        }
+
+        // Core arithmetic helper method
+        private double PerformBaseArithmetic(Quantity<U> other, ArithmeticOperation operation)
+        {
+            double thisBase = ToBase();
+            double otherBase = UnitConverter<U>.ToBase(other._unit, other._value);
+            return Compute(operation, thisBase, otherBase);
+        }
+
+        public Quantity<U> Add(Quantity<U> other)
+        {
+            ValidateArithmeticOperands(other, _unit, false);
+            double resultBase = PerformBaseArithmetic(other, ArithmeticOperation.ADD);
+            double resultInThis = UnitConverter<U>.FromBase(_unit, resultBase);
             return new Quantity<U>(resultInThis, _unit);
         }
 
         public Quantity<U> Add(Quantity<U> other, U? targetUnit)
         {
-            if (other is null) throw new ArgumentNullException(nameof(other));
-            if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
-            if (!Enum.IsDefined(typeof(U), targetUnit.Value))
-                throw new ArgumentOutOfRangeException(nameof(targetUnit));
-
-            double sumBase = ToBase() + UnitConverter<U>.ToBase(other._unit, other._value);
-            double result = UnitConverter<U>.FromBase(targetUnit.Value, sumBase);
+            ValidateArithmeticOperands(other, targetUnit, true);
+            double resultBase = PerformBaseArithmetic(other, ArithmeticOperation.ADD);
+            double result = UnitConverter<U>.FromBase(targetUnit.Value, resultBase);
             return new Quantity<U>(result, targetUnit.Value);
         }
 
         public Quantity<U> Subtract(Quantity<U> other)
         {
-            if (other is null) throw new ArgumentNullException(nameof(other));
-            double diffBase = ToBase() - UnitConverter<U>.ToBase(other._unit, other._value);
-            double resultInThis = UnitConverter<U>.FromBase(_unit, diffBase);
+            ValidateArithmeticOperands(other, _unit, false);
+            double resultBase = PerformBaseArithmetic(other, ArithmeticOperation.SUBTRACT);
+            double resultInThis = UnitConverter<U>.FromBase(_unit, resultBase);
             return new Quantity<U>(resultInThis, _unit);
         }
 
         public Quantity<U> Subtract(Quantity<U> other, U? targetUnit)
         {
-            if (other is null) throw new ArgumentNullException(nameof(other));
-            if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
-            if (!Enum.IsDefined(typeof(U), targetUnit.Value))
-                throw new ArgumentOutOfRangeException(nameof(targetUnit));
-
-            double diffBase = ToBase() - UnitConverter<U>.ToBase(other._unit, other._value);
-            double result = UnitConverter<U>.FromBase(targetUnit.Value, diffBase);
+            ValidateArithmeticOperands(other, targetUnit, true);
+            double resultBase = PerformBaseArithmetic(other, ArithmeticOperation.SUBTRACT);
+            double result = UnitConverter<U>.FromBase(targetUnit.Value, resultBase);
             return new Quantity<U>(result, targetUnit.Value);
         }
 
         public double Divide(Quantity<U> other)
         {
-            if (other is null) throw new ArgumentNullException(nameof(other));
-            double otherBase = UnitConverter<U>.ToBase(other._unit, other._value);
-            if (otherBase == 0.0)
-                throw new ArithmeticException("Cannot divide by zero quantity");
-            double thisBase = ToBase();
-            return thisBase / otherBase;
+            ValidateArithmeticOperands(other, null, false);
+            return PerformBaseArithmetic(other, ArithmeticOperation.DIVIDE);
         }
 
         public override bool Equals(object obj)
