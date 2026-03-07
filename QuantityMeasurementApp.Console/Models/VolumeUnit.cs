@@ -2,27 +2,31 @@ using System;
 
 namespace QuantityMeasurementApp.ConsoleApp.Models
 {
-    public enum VolumeUnit
+    public class VolumeUnit : IMeasurable
     {
-        Litre,
-        Millilitre,
-        Gallon
-    }
+        public string Name { get; }
+        private readonly double _toLitreFactor;
 
-    public static class VolumeUnitExtensions
-    {
-        public static double ToLitreFactor(this VolumeUnit u)
+        private VolumeUnit(string name, double toLitreFactor)
         {
-            switch (u)
-            {
-                case VolumeUnit.Litre: return 1.0;
-                case VolumeUnit.Millilitre: return 0.001;
-                case VolumeUnit.Gallon: return 3.78541;
-                default: throw new ArgumentOutOfRangeException(nameof(u));
-            }
+            Name = name;
+            _toLitreFactor = toLitreFactor;
         }
 
-        public static double ConvertToBaseUnit(this VolumeUnit u, double value) => value * u.ToLitreFactor();
-        public static double ConvertFromBaseUnit(this VolumeUnit u, double baseValue) => baseValue / u.ToLitreFactor();
+        public static readonly VolumeUnit Litre = new VolumeUnit("Litre", 1.0);
+        public static readonly VolumeUnit Millilitre = new VolumeUnit("Millilitre", 0.001);
+        public static readonly VolumeUnit Gallon = new VolumeUnit("Gallon", 3.78541);
+
+        public double ConvertToBaseUnit(double value) => value * _toLitreFactor;
+
+        public double ConvertFromBaseUnit(double baseValue) => baseValue / _toLitreFactor;
+
+        public bool SupportsArithmetic() => true;
+
+        public override bool Equals(object obj) => obj is VolumeUnit other && Name == other.Name;
+
+        public override int GetHashCode() => Name.GetHashCode();
+
+        public override string ToString() => Name;
     }
 }

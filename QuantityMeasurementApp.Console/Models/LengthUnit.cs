@@ -2,38 +2,32 @@ using System;
 
 namespace QuantityMeasurementApp.ConsoleApp.Models
 {
-    public enum LengthUnit
+    public class LengthUnit : IMeasurable
     {
-        Feet,
-        Inch,
-        Yard,
-        Centimeter
-    }
+        public string Name { get; }
+        private readonly double _toFeetFactor;
 
-    public static class LengthUnitExtensions
-    {
-        // conversion factor to base unit (feet)
-        public static double ToFeetFactor(this LengthUnit u)
+        private LengthUnit(string name, double toFeetFactor)
         {
-            switch (u)
-            {
-                case LengthUnit.Feet:
-                    return 1.0;
-                case LengthUnit.Inch:
-                    return 1.0 / 12.0;
-                case LengthUnit.Yard:
-                    return 3.0;
-                case LengthUnit.Centimeter:
-                    return 0.393701 / 12.0;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(u));
-            }
+            Name = name;
+            _toFeetFactor = toFeetFactor;
         }
 
-        public static double ConvertToBaseUnit(this LengthUnit u, double value)
-            => value * u.ToFeetFactor();
+        public static readonly LengthUnit Feet = new LengthUnit("Feet", 1.0);
+        public static readonly LengthUnit Inch = new LengthUnit("Inch", 1.0 / 12.0);
+        public static readonly LengthUnit Yard = new LengthUnit("Yard", 3.0);
+        public static readonly LengthUnit Centimeter = new LengthUnit("Centimeter", 0.393701 / 12.0);
 
-        public static double ConvertFromBaseUnit(this LengthUnit u, double baseValue)
-            => baseValue / u.ToFeetFactor();
+        public double ConvertToBaseUnit(double value) => value * _toFeetFactor;
+
+        public double ConvertFromBaseUnit(double baseValue) => baseValue / _toFeetFactor;
+
+        public bool SupportsArithmetic() => true;
+
+        public override bool Equals(object obj) => obj is LengthUnit other && Name == other.Name;
+
+        public override int GetHashCode() => Name.GetHashCode();
+
+        public override string ToString() => Name;
     }
 }

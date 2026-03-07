@@ -2,7 +2,7 @@ using System;
 
 namespace QuantityMeasurementApp.ConsoleApp.Models
 {
-    public class Quantity<U> where U : struct, Enum
+    public class Quantity<U> where U : IMeasurable
     {
         private readonly double _value;
         private readonly U _unit;
@@ -11,8 +11,8 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
         {
             if (double.IsNaN(value) || double.IsInfinity(value))
                 throw new ArgumentException("Value must be finite", nameof(value));
-            if (!Enum.IsDefined(typeof(U), unit))
-                throw new ArgumentOutOfRangeException(nameof(unit));
+            if (unit is null)
+                throw new ArgumentNullException(nameof(unit));
 
             _value = value;
             _unit = unit;
@@ -21,14 +21,14 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
         public double Value => _value;
         public U Unit => _unit;
 
-        private double ToBase() => UnitConverter<U>.ToBase(_unit, _value);
+        private double ToBase() => _unit.ConvertToBaseUnit(_value);
 
         public Quantity<U> ConvertTo(U target)
         {
-            if (!Enum.IsDefined(typeof(U), target))
-                throw new ArgumentOutOfRangeException(nameof(target));
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
             double baseVal = ToBase();
-            double converted = UnitConverter<U>.FromBase(target, baseVal);
+            double converted = target.ConvertFromBaseUnit(baseVal);
             return new Quantity<U>(converted, target);
         }
 
@@ -53,21 +53,22 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
         }
 
         // Centralized validation helper
-        private void ValidateArithmeticOperands(Quantity<U> other, U? targetUnit, bool targetUnitRequired)
+        private void ValidateArithmeticOperands(Quantity<U> other, object targetUnit, bool targetUnitRequired)
         {
             if (other is null) throw new ArgumentNullException(nameof(other));
             if (double.IsNaN(other._value) || double.IsInfinity(other._value))
                 throw new ArgumentException("Value must be finite", nameof(other));
             if (targetUnitRequired && targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
-            if (targetUnitRequired && !Enum.IsDefined(typeof(U), targetUnit.Value))
-                throw new ArgumentOutOfRangeException(nameof(targetUnit));
+
+            // Validate operation support
+            _unit.ValidateOperationSupport("arithmetic");
         }
 
         // Core arithmetic helper method
         private double PerformBaseArithmetic(Quantity<U> other, ArithmeticOperation operation)
         {
             double thisBase = ToBase();
-            double otherBase = UnitConverter<U>.ToBase(other._unit, other._value);
+            double otherBase = other._unit.ConvertToBaseUnit(other._value);
             return Compute(operation, thisBase, otherBase);
         }
 
@@ -75,32 +76,32 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
         {
             ValidateArithmeticOperands(other, _unit, false);
             double resultBase = PerformBaseArithmetic(other, ArithmeticOperation.ADD);
-            double resultInThis = UnitConverter<U>.FromBase(_unit, resultBase);
+            double resultInThis = _unit.ConvertFromBaseUnit(resultBase);
             return new Quantity<U>(resultInThis, _unit);
         }
 
-        public Quantity<U> Add(Quantity<U> other, U? targetUnit)
+        public Quantity<U> Add(Quantity<U> other, U targetUnit)
         {
             ValidateArithmeticOperands(other, targetUnit, true);
             double resultBase = PerformBaseArithmetic(other, ArithmeticOperation.ADD);
-            double result = UnitConverter<U>.FromBase(targetUnit.Value, resultBase);
-            return new Quantity<U>(result, targetUnit.Value);
+            double result = targetUnit.ConvertFromBaseUnit(resultBase);
+            return new Quantity<U>(result, targetUnit);
         }
 
         public Quantity<U> Subtract(Quantity<U> other)
         {
             ValidateArithmeticOperands(other, _unit, false);
             double resultBase = PerformBaseArithmetic(other, ArithmeticOperation.SUBTRACT);
-            double resultInThis = UnitConverter<U>.FromBase(_unit, resultBase);
+            double resultInThis = _unit.ConvertFromBaseUnit(resultBase);
             return new Quantity<U>(resultInThis, _unit);
         }
 
-        public Quantity<U> Subtract(Quantity<U> other, U? targetUnit)
+        public Quantity<U> Subtract(Quantity<U> other, U targetUnit)
         {
             ValidateArithmeticOperands(other, targetUnit, true);
             double resultBase = PerformBaseArithmetic(other, ArithmeticOperation.SUBTRACT);
-            double result = UnitConverter<U>.FromBase(targetUnit.Value, resultBase);
-            return new Quantity<U>(result, targetUnit.Value);
+            double result = targetUnit.ConvertFromBaseUnit(resultBase);
+            return new Quantity<U>(result, targetUnit);
         }
 
         public double Divide(Quantity<U> other)
@@ -115,8 +116,8 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
             if (obj is null || GetType() != obj.GetType()) return false;
             Quantity<U> other = (Quantity<U>)obj;
             double thisBase = ToBase();
-            double otherBase = UnitConverter<U>.ToBase(other._unit, other._value);
-            return thisBase.CompareTo(otherBase) == 0;
+            double otherBase = other._unit.ConvertToBaseUnit(other._value);
+            return Math.Abs(thisBase - otherBase) < 1e-9; // Use epsilon for floating point
         }
 
         public override int GetHashCode() => ToBase().GetHashCode();

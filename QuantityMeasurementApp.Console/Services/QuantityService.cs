@@ -33,10 +33,8 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
         {
             if (double.IsNaN(value) || double.IsInfinity(value))
                 throw new ArgumentException("Value must be finite", nameof(value));
-            if (!Enum.IsDefined(typeof(LengthUnit), source))
-                throw new ArgumentOutOfRangeException(nameof(source));
-            if (!Enum.IsDefined(typeof(LengthUnit), target))
-                throw new ArgumentOutOfRangeException(nameof(target));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (target is null) throw new ArgumentNullException(nameof(target));
 
             double feet = source.ConvertToBaseUnit(value);
             double result = target.ConvertFromBaseUnit(feet);
@@ -67,12 +65,9 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
                 throw new ArgumentException("First value must be finite", nameof(first));
             if (double.IsNaN(second) || double.IsInfinity(second))
                 throw new ArgumentException("Second value must be finite", nameof(second));
-            if (!Enum.IsDefined(typeof(LengthUnit), unit1))
-                throw new ArgumentOutOfRangeException(nameof(unit1));
-            if (!Enum.IsDefined(typeof(LengthUnit), unit2))
-                throw new ArgumentOutOfRangeException(nameof(unit2));
-            if (!Enum.IsDefined(typeof(LengthUnit), target))
-                throw new ArgumentOutOfRangeException(nameof(target));
+            if (unit1 is null) throw new ArgumentNullException(nameof(unit1));
+            if (unit2 is null) throw new ArgumentNullException(nameof(unit2));
+            if (target is null) throw new ArgumentNullException(nameof(target));
 
             double firstInFeet = unit1.ConvertToBaseUnit(first);
             double secondInFeet = unit2.ConvertToBaseUnit(second);
@@ -86,14 +81,12 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
             if (first is null) throw new ArgumentNullException(nameof(first));
             if (second is null) throw new ArgumentNullException(nameof(second));
             if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
-            if (!Enum.IsDefined(typeof(LengthUnit), targetUnit.Value))
-                throw new ArgumentOutOfRangeException(nameof(targetUnit));
 
             double firstInFeet = first.Unit.ConvertToBaseUnit(first.Value);
             double secondInFeet = second.Unit.ConvertToBaseUnit(second.Value);
             double sumInFeet = firstInFeet + secondInFeet;
-            double resultInTargetUnit = targetUnit.Value.ConvertFromBaseUnit(sumInFeet);
-            return new QuantityLength(resultInTargetUnit, targetUnit.Value);
+            double resultInTargetUnit = targetUnit.ConvertFromBaseUnit(sumInFeet);
+            return new QuantityLength(resultInTargetUnit, targetUnit);
         }
 
         public double Add(double first, LengthUnit unit1, double second, LengthUnit unit2, LengthUnit? targetUnit, LengthUnit? resultUnit)
@@ -102,21 +95,15 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
                 throw new ArgumentException("First value must be finite", nameof(first));
             if (double.IsNaN(second) || double.IsInfinity(second))
                 throw new ArgumentException("Second value must be finite", nameof(second));
-            if (!Enum.IsDefined(typeof(LengthUnit), unit1))
-                throw new ArgumentOutOfRangeException(nameof(unit1));
-            if (!Enum.IsDefined(typeof(LengthUnit), unit2))
-                throw new ArgumentOutOfRangeException(nameof(unit2));
+            if (unit1 is null) throw new ArgumentNullException(nameof(unit1));
+            if (unit2 is null) throw new ArgumentNullException(nameof(unit2));
             if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
             if (resultUnit is null) throw new ArgumentNullException(nameof(resultUnit));
-            if (!Enum.IsDefined(typeof(LengthUnit), targetUnit.Value))
-                throw new ArgumentOutOfRangeException(nameof(targetUnit));
-            if (!Enum.IsDefined(typeof(LengthUnit), resultUnit.Value))
-                throw new ArgumentOutOfRangeException(nameof(resultUnit));
 
             double firstInFeet = unit1.ConvertToBaseUnit(first);
             double secondInFeet = unit2.ConvertToBaseUnit(second);
             double sumInFeet = firstInFeet + secondInFeet;
-            double resultInTargetUnit = targetUnit.Value.ConvertFromBaseUnit(sumInFeet);
+            double resultInTargetUnit = targetUnit.ConvertFromBaseUnit(sumInFeet);
             return resultInTargetUnit;
         }
 
@@ -143,10 +130,8 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
         {
             if (double.IsNaN(value) || double.IsInfinity(value))
                 throw new ArgumentException("Value must be finite", nameof(value));
-            if (!Enum.IsDefined(typeof(WeightUnit), source))
-                throw new ArgumentOutOfRangeException(nameof(source));
-            if (!Enum.IsDefined(typeof(WeightUnit), target))
-                throw new ArgumentOutOfRangeException(nameof(target));
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (target is null) throw new ArgumentNullException(nameof(target));
 
             double kg = source.ConvertToBaseUnit(value);
             double result = target.ConvertFromBaseUnit(kg);
@@ -177,12 +162,9 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
                 throw new ArgumentException("First value must be finite", nameof(first));
             if (double.IsNaN(second) || double.IsInfinity(second))
                 throw new ArgumentException("Second value must be finite", nameof(second));
-            if (!Enum.IsDefined(typeof(WeightUnit), unit1))
-                throw new ArgumentOutOfRangeException(nameof(unit1));
-            if (!Enum.IsDefined(typeof(WeightUnit), unit2))
-                throw new ArgumentOutOfRangeException(nameof(unit2));
-            if (!Enum.IsDefined(typeof(WeightUnit), target))
-                throw new ArgumentOutOfRangeException(nameof(target));
+            if (unit1 is null) throw new ArgumentNullException(nameof(unit1));
+            if (unit2 is null) throw new ArgumentNullException(nameof(unit2));
+            if (target is null) throw new ArgumentNullException(nameof(target));
 
             double firstInKg = unit1.ConvertToBaseUnit(first);
             double secondInKg = unit2.ConvertToBaseUnit(second);
@@ -196,14 +178,12 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
             if (first is null) throw new ArgumentNullException(nameof(first));
             if (second is null) throw new ArgumentNullException(nameof(second));
             if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
-            if (!Enum.IsDefined(typeof(WeightUnit), targetUnit.Value))
-                throw new ArgumentOutOfRangeException(nameof(targetUnit));
 
             double firstInKg = first.Unit.ConvertToBaseUnit(first.Value);
             double secondInKg = second.Unit.ConvertToBaseUnit(second.Value);
             double sumKg = firstInKg + secondInKg;
-            double result = targetUnit.Value.ConvertFromBaseUnit(sumKg);
-            return new QuantityWeight(result, targetUnit.Value);
+            double result = targetUnit.ConvertFromBaseUnit(sumKg);
+            return new QuantityWeight(result, targetUnit);
         }
 
         public double Add(double first, WeightUnit unit1, double second, WeightUnit unit2, WeightUnit? targetUnit, WeightUnit? resultUnit)
@@ -212,21 +192,15 @@ namespace QuantityMeasurementApp.ConsoleApp.Services
                 throw new ArgumentException("First value must be finite", nameof(first));
             if (double.IsNaN(second) || double.IsInfinity(second))
                 throw new ArgumentException("Second value must be finite", nameof(second));
-            if (!Enum.IsDefined(typeof(WeightUnit), unit1))
-                throw new ArgumentOutOfRangeException(nameof(unit1));
-            if (!Enum.IsDefined(typeof(WeightUnit), unit2))
-                throw new ArgumentOutOfRangeException(nameof(unit2));
+            if (unit1 is null) throw new ArgumentNullException(nameof(unit1));
+            if (unit2 is null) throw new ArgumentNullException(nameof(unit2));
             if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
             if (resultUnit is null) throw new ArgumentNullException(nameof(resultUnit));
-            if (!Enum.IsDefined(typeof(WeightUnit), targetUnit.Value))
-                throw new ArgumentOutOfRangeException(nameof(targetUnit));
-            if (!Enum.IsDefined(typeof(WeightUnit), resultUnit.Value))
-                throw new ArgumentOutOfRangeException(nameof(resultUnit));
 
             double firstInKg = unit1.ConvertToBaseUnit(first);
             double secondInKg = unit2.ConvertToBaseUnit(second);
             double sumKg = firstInKg + secondInKg;
-            double result = targetUnit.Value.ConvertFromBaseUnit(sumKg);
+            double result = targetUnit.ConvertFromBaseUnit(sumKg);
             return result;
         }
     }

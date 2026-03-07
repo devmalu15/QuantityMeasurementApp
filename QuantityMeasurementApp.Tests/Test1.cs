@@ -98,13 +98,13 @@ namespace QuantityMeasurementApp.Tests
             bool thrown = false;
             try
             {
-                QApp.AreEqualAcrossUnits(1.0, (LengthUnit)999, 1.0, LengthUnit.Feet);
+                QApp.AreEqualAcrossUnits(1.0, null, 1.0, LengthUnit.Feet);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (ArgumentNullException)
             {
                 thrown = true;
             }
-            Assert.IsTrue(thrown, "Expected ArgumentOutOfRangeException for invalid unit");
+            Assert.IsTrue(thrown, "Expected ArgumentNullException for null unit");
         }
 
         [TestMethod]
@@ -251,13 +251,13 @@ namespace QuantityMeasurementApp.Tests
             bool thrown = false;
             try
             {
-                QApp.Convert(1.0, (LengthUnit)999, LengthUnit.Feet);
+                QApp.Convert(1.0, null, LengthUnit.Feet);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (ArgumentNullException)
             {
                 thrown = true;
             }
-            Assert.IsTrue(thrown, "Invalid unit should cause ArgumentOutOfRangeException");
+            Assert.IsTrue(thrown, "Invalid unit should cause ArgumentNullException");
         }
 
         // UC8 unit enum conversion tests
@@ -312,9 +312,9 @@ namespace QuantityMeasurementApp.Tests
             bool thrown = false;
             try
             {
-                var q = new QuantityLength(1.0, (LengthUnit)999);
+                var q = new QuantityLength(1.0, null);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (ArgumentNullException)
             {
                 thrown = true;
             }
@@ -717,8 +717,8 @@ namespace QuantityMeasurementApp.Tests
             var v1 = new Quantity<VolumeUnit>(1.0, VolumeUnit.Litre);
             var v2 = new Quantity<VolumeUnit>(1.0 / 3.78541, VolumeUnit.Gallon);
             // Due to floating-point rounding, check that the base values are very close
-            double v1Base = v1.Value * VolumeUnit.Litre.ToLitreFactor();
-            double v2Base = v2.Value * VolumeUnit.Gallon.ToLitreFactor();
+            double v1Base = v1.Unit.ConvertToBaseUnit(v1.Value);
+            double v2Base = v2.Unit.ConvertToBaseUnit(v2.Value);
             Assert.AreEqual(v1Base, v2Base, 1e-9, "1 litre should equal 1/3.78541 gallons in base units");
         }
 
@@ -934,12 +934,17 @@ namespace QuantityMeasurementApp.Tests
         public void testValidation_FiniteValue_ConsistentAcrossOperations()
         {
             var q = new Quantity<LengthUnit>(1.0, LengthUnit.Feet);
-            var nanQ = new Quantity<LengthUnit>(double.NaN, LengthUnit.Inch);
-            bool thrownAdd = false, thrownSubtract = false, thrownDivide = false;
-            try { q.Add(nanQ); } catch (ArgumentException) { thrownAdd = true; }
-            try { q.Subtract(nanQ); } catch (ArgumentException) { thrownSubtract = true; }
-            try { q.Divide(nanQ); } catch (ArgumentException) { thrownDivide = true; }
-            Assert.IsTrue(thrownAdd && thrownSubtract && thrownDivide, "All operations should throw ArgumentException for NaN values");
+            // Test that constructor throws for NaN
+            bool thrownConstructor = false;
+            try
+            {
+                var nanQ = new Quantity<LengthUnit>(double.NaN, LengthUnit.Inch);
+            }
+            catch (ArgumentException)
+            {
+                thrownConstructor = true;
+            }
+            Assert.IsTrue(thrownConstructor, "Constructor should throw ArgumentException for NaN values");
         }
 
         [TestMethod]
@@ -1084,6 +1089,150 @@ namespace QuantityMeasurementApp.Tests
             v1.Add(v2);
             v1.Subtract(v2);
             v1.Divide(v2);
+        }
+
+        // ===== UC14: Temperature Measurements with Selective Arithmetic Support =====
+
+        [TestMethod]
+        public void testTemperatureEquality_CelsiusToFahrenheit()
+        {
+            var celsius = new Quantity<TemperatureUnit>(0.0, TemperatureUnit.Celsius);
+            var fahrenheit = new Quantity<TemperatureUnit>(32.0, TemperatureUnit.Fahrenheit);
+            Assert.IsTrue(celsius.Equals(fahrenheit), "0°C should equal 32°F");
+        }
+
+        [TestMethod]
+        public void testTemperatureEquality_CelsiusToKelvin()
+        {
+            var celsius = new Quantity<TemperatureUnit>(0.0, TemperatureUnit.Celsius);
+            var kelvin = new Quantity<TemperatureUnit>(273.15, TemperatureUnit.Kelvin);
+            Assert.IsTrue(celsius.Equals(kelvin), "0°C should equal 273.15 K");
+        }
+
+        [TestMethod]
+        public void testTemperatureEquality_FahrenheitToKelvin()
+        {
+            var fahrenheit = new Quantity<TemperatureUnit>(32.0, TemperatureUnit.Fahrenheit);
+            var kelvin = new Quantity<TemperatureUnit>(273.15, TemperatureUnit.Kelvin);
+            Assert.IsTrue(fahrenheit.Equals(kelvin), "32°F should equal 273.15 K");
+        }
+
+        [TestMethod]
+        public void testTemperatureConversion_CelsiusToFahrenheit()
+        {
+            var celsius = new Quantity<TemperatureUnit>(100.0, TemperatureUnit.Celsius);
+            var fahrenheit = celsius.ConvertTo(TemperatureUnit.Fahrenheit);
+            Assert.AreEqual(212.0, fahrenheit.Value, 1e-9, "100°C should convert to 212°F");
+            Assert.AreEqual(TemperatureUnit.Fahrenheit, fahrenheit.Unit);
+        }
+
+        [TestMethod]
+        public void testTemperatureConversion_FahrenheitToCelsius()
+        {
+            var fahrenheit = new Quantity<TemperatureUnit>(212.0, TemperatureUnit.Fahrenheit);
+            var celsius = fahrenheit.ConvertTo(TemperatureUnit.Celsius);
+            Assert.AreEqual(100.0, celsius.Value, 1e-9, "212°F should convert to 100°C");
+            Assert.AreEqual(TemperatureUnit.Celsius, celsius.Unit);
+        }
+
+        [TestMethod]
+        public void testTemperatureConversion_KelvinToCelsius()
+        {
+            var kelvin = new Quantity<TemperatureUnit>(373.15, TemperatureUnit.Kelvin);
+            var celsius = kelvin.ConvertTo(TemperatureUnit.Celsius);
+            Assert.AreEqual(100.0, celsius.Value, 1e-9, "373.15 K should convert to 100°C");
+            Assert.AreEqual(TemperatureUnit.Celsius, celsius.Unit);
+        }
+
+        [TestMethod]
+        public void testTemperatureArithmetic_AdditionNotSupported()
+        {
+            var t1 = new Quantity<TemperatureUnit>(20.0, TemperatureUnit.Celsius);
+            var t2 = new Quantity<TemperatureUnit>(10.0, TemperatureUnit.Celsius);
+            bool thrown = false;
+            try
+            {
+                t1.Add(t2);
+            }
+            catch (NotSupportedException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown, "Temperature addition should not be supported");
+        }
+
+        [TestMethod]
+        public void testTemperatureArithmetic_SubtractionNotSupported()
+        {
+            var t1 = new Quantity<TemperatureUnit>(20.0, TemperatureUnit.Celsius);
+            var t2 = new Quantity<TemperatureUnit>(10.0, TemperatureUnit.Celsius);
+            bool thrown = false;
+            try
+            {
+                t1.Subtract(t2);
+            }
+            catch (NotSupportedException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown, "Temperature subtraction should not be supported");
+        }
+
+        [TestMethod]
+        public void testTemperatureArithmetic_DivisionNotSupported()
+        {
+            var t1 = new Quantity<TemperatureUnit>(20.0, TemperatureUnit.Celsius);
+            var t2 = new Quantity<TemperatureUnit>(10.0, TemperatureUnit.Celsius);
+            bool thrown = false;
+            try
+            {
+                t1.Divide(t2);
+            }
+            catch (NotSupportedException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown, "Temperature division should not be supported");
+        }
+
+        [TestMethod]
+        public void testTemperatureSupportsArithmetic_ReturnsFalse()
+        {
+            Assert.IsFalse(TemperatureUnit.Celsius.SupportsArithmetic(), "Temperature units should not support arithmetic");
+            Assert.IsFalse(TemperatureUnit.Fahrenheit.SupportsArithmetic(), "Temperature units should not support arithmetic");
+            Assert.IsFalse(TemperatureUnit.Kelvin.SupportsArithmetic(), "Temperature units should not support arithmetic");
+        }
+
+        [TestMethod]
+        public void testTemperatureValidateOperationSupport_ThrowsForArithmetic()
+        {
+            var unit = TemperatureUnit.Celsius;
+            bool thrown = false;
+            try
+            {
+                unit.ValidateOperationSupport("arithmetic");
+            }
+            catch (NotSupportedException)
+            {
+                thrown = true;
+            }
+            Assert.IsTrue(thrown, "ValidateOperationSupport should throw for arithmetic on temperature");
+        }
+
+        [TestMethod]
+        public void testTemperatureInequality()
+        {
+            var t1 = new Quantity<TemperatureUnit>(0.0, TemperatureUnit.Celsius);
+            var t2 = new Quantity<TemperatureUnit>(10.0, TemperatureUnit.Celsius);
+            Assert.IsFalse(t1.Equals(t2), "0°C should not equal 10°C");
+        }
+
+        [TestMethod]
+        public void testTemperatureCrossUnitInequality()
+        {
+            var celsius = new Quantity<TemperatureUnit>(0.0, TemperatureUnit.Celsius);
+            var fahrenheit = new Quantity<TemperatureUnit>(33.0, TemperatureUnit.Fahrenheit); // 33°F is about 0.555°C
+            Assert.IsFalse(celsius.Equals(fahrenheit), "0°C should not equal 33°F");
         }
     }
 }

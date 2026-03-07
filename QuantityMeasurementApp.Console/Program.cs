@@ -26,9 +26,12 @@ namespace QuantityMeasurementApp.ConsoleApp
 						HandleVolumeOperations();
 						break;
 					case "4":
-						DisplayQuickDemo();
+						HandleTemperatureOperations();
 						break;
 					case "5":
+						DisplayQuickDemo();
+						break;
+					case "6":
 						exit = true;
 						Console.WriteLine("\nGoodbye!");
 						break;
@@ -39,6 +42,51 @@ namespace QuantityMeasurementApp.ConsoleApp
 			}
 		}
 
+		private static LengthUnit ParseLengthUnit(string input)
+		{
+			return input?.Trim().ToLower() switch
+			{
+				"feet" => LengthUnit.Feet,
+				"inch" => LengthUnit.Inch,
+				"yard" => LengthUnit.Yard,
+				"centimeter" => LengthUnit.Centimeter,
+				_ => throw new ArgumentException("Invalid length unit")
+			};
+		}
+
+		private static WeightUnit ParseWeightUnit(string input)
+		{
+			return input?.Trim().ToLower() switch
+			{
+				"kilogram" => WeightUnit.Kilogram,
+				"gram" => WeightUnit.Gram,
+				"pound" => WeightUnit.Pound,
+				_ => throw new ArgumentException("Invalid weight unit")
+			};
+		}
+
+		private static VolumeUnit ParseVolumeUnit(string input)
+		{
+			return input?.Trim().ToLower() switch
+			{
+				"litre" => VolumeUnit.Litre,
+				"millilitre" => VolumeUnit.Millilitre,
+				"gallon" => VolumeUnit.Gallon,
+				_ => throw new ArgumentException("Invalid volume unit")
+			};
+		}
+
+		private static TemperatureUnit ParseTemperatureUnit(string input)
+		{
+			return input?.Trim().ToLower() switch
+			{
+				"celsius" => TemperatureUnit.Celsius,
+				"fahrenheit" => TemperatureUnit.Fahrenheit,
+				"kelvin" => TemperatureUnit.Kelvin,
+				_ => throw new ArgumentException("Invalid temperature unit")
+			};
+		}
+
 		private static void PrintMainMenu()
 		{
 			Console.WriteLine("\n========================================");
@@ -47,8 +95,9 @@ namespace QuantityMeasurementApp.ConsoleApp
 			Console.WriteLine("1. Length Measurements (feet, inch, yard, cm)");
 			Console.WriteLine("2. Weight Measurements (kg, gram, pound)");
 			Console.WriteLine("3. Volume Measurements (litre, ml, gallon)");
-			Console.WriteLine("4. Quick Demo");
-			Console.WriteLine("5. Exit");
+			Console.WriteLine("4. Temperature Measurements (Celsius, Fahrenheit, Kelvin)");
+			Console.WriteLine("5. Quick Demo");
+			Console.WriteLine("6. Exit");
 			Console.WriteLine("========================================");
 			Console.Write("Select option: ");
 		}
@@ -179,6 +228,36 @@ namespace QuantityMeasurementApp.ConsoleApp
 			}
 		}
 
+		private static void HandleTemperatureOperations()
+		{
+			bool back = false;
+			while (!back)
+			{
+				Console.WriteLine("\n--- TEMPERATURE OPERATIONS ---");
+				Console.WriteLine("1. Compare two temperatures (Equality)");
+				Console.WriteLine("2. Convert temperature unit");
+				Console.WriteLine("3. Back to main menu");
+				Console.Write("Select operation: ");
+
+				string choice = Console.ReadLine();
+				switch (choice?.Trim().ToLower())
+				{
+					case "1":
+						CompareTemperatures();
+						break;
+					case "2":
+						ConvertTemperature();
+						break;
+					case "3":
+						back = true;
+						break;
+					default:
+						Console.WriteLine("Invalid choice.");
+						break;
+				}
+			}
+		}
+
 		// ===== LENGTH HANDLERS =====
 		private static void CompareLengths()
 		{
@@ -187,15 +266,17 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter first unit (Feet/Inch/Yard/Centimeter): ");
-			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+			LengthUnit unit1;
+			try { unit1 = ParseLengthUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter second value: ");
 			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter second unit (Feet/Inch/Yard/Centimeter): ");
-			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+			LengthUnit unit2;
+			try { unit2 = ParseLengthUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
-			bool equal = QApp.AreEqualAcrossUnits(val1, unit1, val2, unit2);
+			bool equal = new Quantity<LengthUnit>(val1, unit1).Equals(new Quantity<LengthUnit>(val2, unit2));
 			Console.WriteLine($"\n{val1} {unit1} equals {val2} {unit2}? {equal.ToString().ToLowerInvariant()}");
 		}
 
@@ -206,13 +287,16 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter source unit (Feet/Inch/Yard/Centimeter): ");
-			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var sourceUnit)) { Console.WriteLine("Invalid unit."); return; }
+			LengthUnit sourceUnit;
+			try { sourceUnit = ParseLengthUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter target unit (Feet/Inch/Yard/Centimeter): ");
-			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var targetUnit)) { Console.WriteLine("Invalid unit."); return; }
+			LengthUnit targetUnit;
+			try { targetUnit = ParseLengthUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
-			double result = QApp.Convert(val, sourceUnit, targetUnit);
-			Console.WriteLine($"\n{val} {sourceUnit} = {result} {targetUnit}");
+			var q = new Quantity<LengthUnit>(val, sourceUnit);
+			var converted = q.ConvertTo(targetUnit);
+			Console.WriteLine($"\n{val} {sourceUnit} = {converted.Value} {converted.Unit}");
 		}
 
 		private static void AddLengths()
@@ -222,19 +306,24 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter first unit (Feet/Inch/Yard/Centimeter): ");
-			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+			LengthUnit unit1;
+			try { unit1 = ParseLengthUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter second value: ");
 			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter second unit (Feet/Inch/Yard/Centimeter): ");
-			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+			LengthUnit unit2;
+			try { unit2 = ParseLengthUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter result unit (Feet/Inch/Yard/Centimeter): ");
-			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var resultUnit)) { Console.WriteLine("Invalid unit."); return; }
+			LengthUnit resultUnit;
+			try { resultUnit = ParseLengthUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
-			double result = QApp.Add(val1, unit1, val2, unit2, resultUnit);
-			Console.WriteLine($"\n{val1} {unit1} + {val2} {unit2} = {result} {resultUnit}");
+			var q1 = new Quantity<LengthUnit>(val1, unit1);
+			var q2 = new Quantity<LengthUnit>(val2, unit2);
+			var sum = q1.Add(q2, resultUnit);
+			Console.WriteLine($"\n{val1} {unit1} + {val2} {unit2} = {sum.Value} {sum.Unit}");
 		}
 
 		// ===== WEIGHT HANDLERS =====
@@ -245,15 +334,17 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter first unit (Kilogram/Gram/Pound): ");
-			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+			WeightUnit unit1;
+			try { unit1 = ParseWeightUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter second value: ");
 			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter second unit (Kilogram/Gram/Pound): ");
-			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+			WeightUnit unit2;
+			try { unit2 = ParseWeightUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
-			bool equal = QApp.AreEqualAcrossWeightUnits(val1, unit1, val2, unit2);
+			bool equal = new Quantity<WeightUnit>(val1, unit1).Equals(new Quantity<WeightUnit>(val2, unit2));
 			Console.WriteLine($"\n{val1} {unit1} equals {val2} {unit2}? {equal.ToString().ToLowerInvariant()}");
 		}
 
@@ -264,13 +355,16 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter source unit (Kilogram/Gram/Pound): ");
-			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var sourceUnit)) { Console.WriteLine("Invalid unit."); return; }
+			WeightUnit sourceUnit;
+			try { sourceUnit = ParseWeightUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter target unit (Kilogram/Gram/Pound): ");
-			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var targetUnit)) { Console.WriteLine("Invalid unit."); return; }
+			WeightUnit targetUnit;
+			try { targetUnit = ParseWeightUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
-			double result = QApp.Convert(val, sourceUnit, targetUnit);
-			Console.WriteLine($"\n{val} {sourceUnit} = {result} {targetUnit}");
+			var q = new Quantity<WeightUnit>(val, sourceUnit);
+			var converted = q.ConvertTo(targetUnit);
+			Console.WriteLine($"\n{val} {sourceUnit} = {converted.Value} {converted.Unit}");
 		}
 
 		private static void AddWeights()
@@ -280,19 +374,24 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter first unit (Kilogram/Gram/Pound): ");
-			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+			WeightUnit unit1;
+			try { unit1 = ParseWeightUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter second value: ");
 			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter second unit (Kilogram/Gram/Pound): ");
-			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+			WeightUnit unit2;
+			try { unit2 = ParseWeightUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter result unit (Kilogram/Gram/Pound): ");
-			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var resultUnit)) { Console.WriteLine("Invalid unit."); return; }
+			WeightUnit resultUnit;
+			try { resultUnit = ParseWeightUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
-			double result = QApp.Add(val1, unit1, val2, unit2, resultUnit);
-			Console.WriteLine($"\n{val1} {unit1} + {val2} {unit2} = {result} {resultUnit}");
+			var q1 = new Quantity<WeightUnit>(val1, unit1);
+			var q2 = new Quantity<WeightUnit>(val2, unit2);
+			var sum = q1.Add(q2, resultUnit);
+			Console.WriteLine($"\n{val1} {unit1} + {val2} {unit2} = {sum.Value} {sum.Unit}");
 		}
 
 		// ===== VOLUME HANDLERS =====
@@ -303,13 +402,15 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter first unit (Litre/Millilitre/Gallon): ");
-			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+			VolumeUnit unit1;
+			try { unit1 = ParseVolumeUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter second value: ");
 			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter second unit (Litre/Millilitre/Gallon): ");
-			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+			VolumeUnit unit2;
+			try { unit2 = ParseVolumeUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			var v1 = new Quantity<VolumeUnit>(val1, unit1);
 			var v2 = new Quantity<VolumeUnit>(val2, unit2);
@@ -324,14 +425,16 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter source unit (Litre/Millilitre/Gallon): ");
-			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var sourceUnit)) { Console.WriteLine("Invalid unit."); return; }
+			VolumeUnit sourceUnit;
+			try { sourceUnit = ParseVolumeUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter target unit (Litre/Millilitre/Gallon): ");
-			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var targetUnit)) { Console.WriteLine("Invalid unit."); return; }
+			VolumeUnit targetUnit;
+			try { targetUnit = ParseVolumeUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			var v = new Quantity<VolumeUnit>(val, sourceUnit);
 			var converted = v.ConvertTo(targetUnit);
-			Console.WriteLine($"\n{val} {sourceUnit} = {converted.Value} {targetUnit}");
+			Console.WriteLine($"\n{val} {sourceUnit} = {converted.Value} {converted.Unit}");
 		}
 
 		private static void AddVolumes()
@@ -341,21 +444,24 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter first unit (Litre/Millilitre/Gallon): ");
-			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+			VolumeUnit unit1;
+			try { unit1 = ParseVolumeUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter second value: ");
 			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter second unit (Litre/Millilitre/Gallon): ");
-			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+			VolumeUnit unit2;
+			try { unit2 = ParseVolumeUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter result unit (Litre/Millilitre/Gallon): ");
-			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var resultUnit)) { Console.WriteLine("Invalid unit."); return; }
+			VolumeUnit resultUnit;
+			try { resultUnit = ParseVolumeUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			var v1 = new Quantity<VolumeUnit>(val1, unit1);
 			var v2 = new Quantity<VolumeUnit>(val2, unit2);
 			var result = v1.Add(v2, resultUnit);
-			Console.WriteLine($"\n{val1} {unit1} + {val2} {unit2} = {result.Value} {resultUnit}");
+			Console.WriteLine($"\n{val1} {unit1} + {val2} {unit2} = {result.Value} {result.Unit}");
 		}
 
 		// ===== SUBTRACT HANDLERS =====
@@ -366,19 +472,24 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter first unit (Feet/Inch/Yard/Centimeter): ");
-			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+			LengthUnit unit1;
+			try { unit1 = ParseLengthUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter second value: ");
 			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter second unit (Feet/Inch/Yard/Centimeter): ");
-			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+			LengthUnit unit2;
+			try { unit2 = ParseLengthUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter result unit (Feet/Inch/Yard/Centimeter): ");
-			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var resultUnit)) { Console.WriteLine("Invalid unit."); return; }
+			LengthUnit resultUnit;
+			try { resultUnit = ParseLengthUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
-			double result = QApp.Subtract(val1, unit1, val2, unit2, resultUnit);
-			Console.WriteLine($"\n{val1} {unit1} - {val2} {unit2} = {result} {resultUnit}");
+			var q1 = new Quantity<LengthUnit>(val1, unit1);
+			var q2 = new Quantity<LengthUnit>(val2, unit2);
+			var diff = q1.Subtract(q2, resultUnit);
+			Console.WriteLine($"\n{val1} {unit1} - {val2} {unit2} = {diff.Value} {diff.Unit}");
 		}
 
 		private static void SubtractWeights()
@@ -388,19 +499,24 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter first unit (Kilogram/Gram/Pound): ");
-			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+			WeightUnit unit1;
+			try { unit1 = ParseWeightUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter second value: ");
 			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter second unit (Kilogram/Gram/Pound): ");
-			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+			WeightUnit unit2;
+			try { unit2 = ParseWeightUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter result unit (Kilogram/Gram/Pound): ");
-			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var resultUnit)) { Console.WriteLine("Invalid unit."); return; }
+			WeightUnit resultUnit;
+			try { resultUnit = ParseWeightUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
-			double result = QApp.Subtract(val1, unit1, val2, unit2, resultUnit);
-			Console.WriteLine($"\n{val1} {unit1} - {val2} {unit2} = {result} {resultUnit}");
+			var q1 = new Quantity<WeightUnit>(val1, unit1);
+			var q2 = new Quantity<WeightUnit>(val2, unit2);
+			var diff = q1.Subtract(q2, resultUnit);
+			Console.WriteLine($"\n{val1} {unit1} - {val2} {unit2} = {diff.Value} {diff.Unit}");
 		}
 
 		private static void SubtractVolumes()
@@ -410,21 +526,24 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter first unit (Litre/Millilitre/Gallon): ");
-			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+			VolumeUnit unit1;
+			try { unit1 = ParseVolumeUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter second value: ");
 			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter second unit (Litre/Millilitre/Gallon): ");
-			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+			VolumeUnit unit2;
+			try { unit2 = ParseVolumeUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter result unit (Litre/Millilitre/Gallon): ");
-			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var resultUnit)) { Console.WriteLine("Invalid unit."); return; }
+			VolumeUnit resultUnit;
+			try { resultUnit = ParseVolumeUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			var v1 = new Quantity<VolumeUnit>(val1, unit1);
 			var v2 = new Quantity<VolumeUnit>(val2, unit2);
 			var result = v1.Subtract(v2, resultUnit);
-			Console.WriteLine($"\n{val1} {unit1} - {val2} {unit2} = {result.Value} {resultUnit}");
+			Console.WriteLine($"\n{val1} {unit1} - {val2} {unit2} = {result.Value} {result.Unit}");
 		}
 
 		// ===== DIVIDE HANDLERS =====
@@ -435,15 +554,19 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter first unit (Feet/Inch/Yard/Centimeter): ");
-			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+			LengthUnit unit1;
+			try { unit1 = ParseLengthUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter second value: ");
 			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter second unit (Feet/Inch/Yard/Centimeter): ");
-			if (!Enum.TryParse<LengthUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+			LengthUnit unit2;
+			try { unit2 = ParseLengthUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
-			double result = QApp.Divide(val1, unit1, val2, unit2);
+			var q1 = new Quantity<LengthUnit>(val1, unit1);
+			var q2 = new Quantity<LengthUnit>(val2, unit2);
+			double result = q1.Divide(q2);
 			Console.WriteLine($"\n{val1} {unit1} / {val2} {unit2} = {result}");
 		}
 
@@ -454,15 +577,19 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter first unit (Kilogram/Gram/Pound): ");
-			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+			WeightUnit unit1;
+			try { unit1 = ParseWeightUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter second value: ");
 			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter second unit (Kilogram/Gram/Pound): ");
-			if (!Enum.TryParse<WeightUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+			WeightUnit unit2;
+			try { unit2 = ParseWeightUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
-			double result = QApp.Divide(val1, unit1, val2, unit2);
+			var q1 = new Quantity<WeightUnit>(val1, unit1);
+			var q2 = new Quantity<WeightUnit>(val2, unit2);
+			double result = q1.Divide(q2);
 			Console.WriteLine($"\n{val1} {unit1} / {val2} {unit2} = {result}");
 		}
 
@@ -473,13 +600,15 @@ namespace QuantityMeasurementApp.ConsoleApp
 			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter first unit (Litre/Millilitre/Gallon): ");
-			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var unit1)) { Console.WriteLine("Invalid unit."); return; }
+			VolumeUnit unit1;
+			try { unit1 = ParseVolumeUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			Console.Write("Enter second value: ");
 			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
 
 			Console.Write("Enter second unit (Litre/Millilitre/Gallon): ");
-			if (!Enum.TryParse<VolumeUnit>(Console.ReadLine(), true, out var unit2)) { Console.WriteLine("Invalid unit."); return; }
+			VolumeUnit unit2;
+			try { unit2 = ParseVolumeUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
 
 			var v1 = new Quantity<VolumeUnit>(val1, unit1);
 			var v2 = new Quantity<VolumeUnit>(val2, unit2);
@@ -519,7 +648,65 @@ namespace QuantityMeasurementApp.ConsoleApp
 			var vsum = v1.Add(v4, VolumeUnit.Millilitre);
 			Console.WriteLine($"1 litre + 1 gallon = {vsum.Value} ml");
 
+			// Temperature demo
+			Console.WriteLine("\n--- TEMPERATURE EXAMPLES ---");
+			var t1 = new Quantity<TemperatureUnit>(0.0, TemperatureUnit.Celsius);
+			var t2 = new Quantity<TemperatureUnit>(32.0, TemperatureUnit.Fahrenheit);
+			Console.WriteLine($"0°C = 32°F? {t1.Equals(t2)}");
+			var t3 = t1.ConvertTo(TemperatureUnit.Kelvin);
+			Console.WriteLine($"0°C = {t3.Value} K");
+			// Note: Arithmetic operations are not supported for temperature
+			try
+			{
+				var tsum = t1.Add(t2);
+			}
+			catch (NotSupportedException ex)
+			{
+				Console.WriteLine($"Temperature addition: {ex.Message}");
+			}
+
 			Console.WriteLine("\n================================");
+		}
+
+		// ===== TEMPERATURE HANDLERS =====
+		private static void CompareTemperatures()
+		{
+			Console.WriteLine("\nAvailable temperature units: Celsius, Fahrenheit, Kelvin");
+			Console.Write("Enter first value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val1)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter first unit (Celsius/Fahrenheit/Kelvin): ");
+			TemperatureUnit unit1;
+			try { unit1 = ParseTemperatureUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
+
+			Console.Write("Enter second value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val2)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter second unit (Celsius/Fahrenheit/Kelvin): ");
+			TemperatureUnit unit2;
+			try { unit2 = ParseTemperatureUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
+
+			bool equal = new Quantity<TemperatureUnit>(val1, unit1).Equals(new Quantity<TemperatureUnit>(val2, unit2));
+			Console.WriteLine($"\n{val1} {unit1} equals {val2} {unit2}? {equal.ToString().ToLowerInvariant()}");
+		}
+
+		private static void ConvertTemperature()
+		{
+			Console.WriteLine("\nAvailable temperature units: Celsius, Fahrenheit, Kelvin");
+			Console.Write("Enter value: ");
+			if (!double.TryParse(Console.ReadLine(), out double val)) { Console.WriteLine("Invalid input."); return; }
+
+			Console.Write("Enter source unit (Celsius/Fahrenheit/Kelvin): ");
+			TemperatureUnit sourceUnit;
+			try { sourceUnit = ParseTemperatureUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
+
+			Console.Write("Enter target unit (Celsius/Fahrenheit/Kelvin): ");
+			TemperatureUnit targetUnit;
+			try { targetUnit = ParseTemperatureUnit(Console.ReadLine()); } catch { Console.WriteLine("Invalid unit."); return; }
+
+			var q = new Quantity<TemperatureUnit>(val, sourceUnit);
+			var converted = q.ConvertTo(targetUnit);
+			Console.WriteLine($"\n{val} {sourceUnit} = {converted.Value} {converted.Unit}");
 		}
 	}
 }

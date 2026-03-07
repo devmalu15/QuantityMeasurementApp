@@ -11,8 +11,8 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
         {
             if (double.IsNaN(value) || double.IsInfinity(value))
                 throw new ArgumentException("Value must be finite", nameof(value));
-            if (!Enum.IsDefined(typeof(WeightUnit), unit))
-                throw new ArgumentOutOfRangeException(nameof(unit));
+            if (unit is null)
+                throw new ArgumentNullException(nameof(unit));
 
             _value = value;
             _unit = unit;
@@ -25,8 +25,8 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
 
         public QuantityWeight ConvertTo(WeightUnit target)
         {
-            if (!Enum.IsDefined(typeof(WeightUnit), target))
-                throw new ArgumentOutOfRangeException(nameof(target));
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
             double kg = ToKilogram();
             double converted = target.ConvertFromBaseUnit(kg);
             return new QuantityWeight(converted, target);
@@ -42,18 +42,16 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
             return new QuantityWeight(resultInThisUnit, _unit);
         }
 
-        public QuantityWeight Add(QuantityWeight other, WeightUnit? targetUnit)
+        public QuantityWeight Add(QuantityWeight other, WeightUnit targetUnit)
         {
             if (other is null) throw new ArgumentNullException(nameof(other));
             if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
-            if (!Enum.IsDefined(typeof(WeightUnit), targetUnit.Value))
-                throw new ArgumentOutOfRangeException(nameof(targetUnit));
 
             double thisKg = ToKilogram();
             double otherKg = other.Unit.ConvertToBaseUnit(other.Value);
             double sumKg = thisKg + otherKg;
-            double result = targetUnit.Value.ConvertFromBaseUnit(sumKg);
-            return new QuantityWeight(result, targetUnit.Value);
+            double result = targetUnit.ConvertFromBaseUnit(sumKg);
+            return new QuantityWeight(result, targetUnit);
         }
 
             public QuantityWeight Subtract(QuantityWeight other)
@@ -66,18 +64,16 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
                 return new QuantityWeight(resultInThisUnit, _unit);
             }
 
-            public QuantityWeight Subtract(QuantityWeight other, WeightUnit? targetUnit)
+            public QuantityWeight Subtract(QuantityWeight other, WeightUnit targetUnit)
             {
                 if (other is null) throw new ArgumentNullException(nameof(other));
                 if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
-                if (!Enum.IsDefined(typeof(WeightUnit), targetUnit.Value))
-                    throw new ArgumentOutOfRangeException(nameof(targetUnit));
 
                 double thisInKg = _unit.ConvertToBaseUnit(_value);
                 double otherInKg = other.Unit.ConvertToBaseUnit(other.Value);
                 double diffKg = thisInKg - otherInKg;
-                double result = targetUnit.Value.ConvertFromBaseUnit(diffKg);
-                return new QuantityWeight(result, targetUnit.Value);
+                double result = targetUnit.ConvertFromBaseUnit(diffKg);
+                return new QuantityWeight(result, targetUnit);
             }
 
             public double Divide(QuantityWeight other)

@@ -38,13 +38,13 @@ namespace QuantityMeasurementApp.ConsoleApp
             => _service.Add(first, unit1, second, unit2, targetUnit, resultUnit);
 
         // generic facade for all measurement types
-        public static Quantity<U> Subtract<U>(Quantity<U> first, Quantity<U> second) where U : struct, Enum
+        public static Quantity<U> Subtract<U>(Quantity<U> first, Quantity<U> second) where U : IMeasurable
             => first.Subtract(second);
 
-        public static Quantity<U> Subtract<U>(Quantity<U> first, Quantity<U> second, U? targetUnit) where U : struct, Enum
+        public static Quantity<U> Subtract<U>(Quantity<U> first, Quantity<U> second, U targetUnit) where U : IMeasurable
             => first.Subtract(second, targetUnit);
 
-        public static double Divide<U>(Quantity<U> first, Quantity<U> second) where U : struct, Enum
+        public static double Divide<U>(Quantity<U> first, Quantity<U> second) where U : IMeasurable
             => first.Divide(second);
         
         // Legacy/compatibility overloads for legacy wrapper types

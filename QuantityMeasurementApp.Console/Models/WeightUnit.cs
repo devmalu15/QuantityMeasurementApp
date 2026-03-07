@@ -2,35 +2,31 @@ using System;
 
 namespace QuantityMeasurementApp.ConsoleApp.Models
 {
-    public enum WeightUnit
+    public class WeightUnit : IMeasurable
     {
-        Kilogram,
-        Gram,
-        Pound
-    }
+        public string Name { get; }
+        private readonly double _toKilogramFactor;
 
-    public static class WeightUnitExtensions
-    {
-        // conversion factor to base unit (kilogram)
-        public static double ToKilogramFactor(this WeightUnit u)
+        private WeightUnit(string name, double toKilogramFactor)
         {
-            switch (u)
-            {
-                case WeightUnit.Kilogram:
-                    return 1.0;
-                case WeightUnit.Gram:
-                    return 0.001; // 1 g = 0.001 kg
-                case WeightUnit.Pound:
-                    return 0.453592; // 1 lb ≈ 0.453592 kg
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(u));
-            }
+            Name = name;
+            _toKilogramFactor = toKilogramFactor;
         }
 
-        public static double ConvertToBaseUnit(this WeightUnit u, double value)
-            => value * u.ToKilogramFactor();
+        public static readonly WeightUnit Kilogram = new WeightUnit("Kilogram", 1.0);
+        public static readonly WeightUnit Gram = new WeightUnit("Gram", 0.001);
+        public static readonly WeightUnit Pound = new WeightUnit("Pound", 0.453592);
 
-        public static double ConvertFromBaseUnit(this WeightUnit u, double baseValue)
-            => baseValue / u.ToKilogramFactor();
+        public double ConvertToBaseUnit(double value) => value * _toKilogramFactor;
+
+        public double ConvertFromBaseUnit(double baseValue) => baseValue / _toKilogramFactor;
+
+        public bool SupportsArithmetic() => true;
+
+        public override bool Equals(object obj) => obj is WeightUnit other && Name == other.Name;
+
+        public override int GetHashCode() => Name.GetHashCode();
+
+        public override string ToString() => Name;
     }
 }

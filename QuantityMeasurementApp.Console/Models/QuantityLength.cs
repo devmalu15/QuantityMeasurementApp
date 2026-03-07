@@ -11,8 +11,8 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
         {
             if (double.IsNaN(value) || double.IsInfinity(value))
                 throw new ArgumentException("Value must be finite", nameof(value));
-            if (!Enum.IsDefined(typeof(LengthUnit), unit))
-                throw new ArgumentOutOfRangeException(nameof(unit));
+            if (unit is null)
+                throw new ArgumentNullException(nameof(unit));
 
             _value = value;
             _unit = unit;
@@ -25,8 +25,8 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
 
         public QuantityLength ConvertTo(LengthUnit target)
         {
-            if (!Enum.IsDefined(typeof(LengthUnit), target))
-                throw new ArgumentOutOfRangeException(nameof(target));
+            if (target is null)
+                throw new ArgumentNullException(nameof(target));
             double feet = ToFeet();
             double valueInTarget = target.ConvertFromBaseUnit(feet);
             return new QuantityLength(valueInTarget, target);
@@ -42,18 +42,16 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
             return new QuantityLength(resultInThisUnit, _unit);
         }
 
-        public QuantityLength Add(QuantityLength other, LengthUnit? targetUnit)
+        public QuantityLength Add(QuantityLength other, LengthUnit targetUnit)
         {
             if (other is null) throw new ArgumentNullException(nameof(other));
             if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
-            if (!Enum.IsDefined(typeof(LengthUnit), targetUnit.Value))
-                throw new ArgumentOutOfRangeException(nameof(targetUnit));
 
             double thisInFeet = ToFeet();
             double otherInFeet = other.Unit.ConvertToBaseUnit(other.Value);
             double sumInFeet = thisInFeet + otherInFeet;
-            double resultInTargetUnit = targetUnit.Value.ConvertFromBaseUnit(sumInFeet);
-            return new QuantityLength(resultInTargetUnit, targetUnit.Value);
+            double resultInTargetUnit = targetUnit.ConvertFromBaseUnit(sumInFeet);
+            return new QuantityLength(resultInTargetUnit, targetUnit);
         }
 
         public QuantityLength Subtract(QuantityLength other)
@@ -66,18 +64,16 @@ namespace QuantityMeasurementApp.ConsoleApp.Models
             return new QuantityLength(resultInThisUnit, _unit);
         }
 
-        public QuantityLength Subtract(QuantityLength other, LengthUnit? targetUnit)
+        public QuantityLength Subtract(QuantityLength other, LengthUnit targetUnit)
         {
             if (other is null) throw new ArgumentNullException(nameof(other));
             if (targetUnit is null) throw new ArgumentNullException(nameof(targetUnit));
-            if (!Enum.IsDefined(typeof(LengthUnit), targetUnit.Value))
-                throw new ArgumentOutOfRangeException(nameof(targetUnit));
 
             double thisInFeet = ToFeet();
             double otherInFeet = other.Unit.ConvertToBaseUnit(other.Value);
             double diffInFeet = thisInFeet - otherInFeet;
-            double result = targetUnit.Value.ConvertFromBaseUnit(diffInFeet);
-            return new QuantityLength(result, targetUnit.Value);
+            double result = targetUnit.ConvertFromBaseUnit(diffInFeet);
+            return new QuantityLength(result, targetUnit);
         }
 
         public double Divide(QuantityLength other)
