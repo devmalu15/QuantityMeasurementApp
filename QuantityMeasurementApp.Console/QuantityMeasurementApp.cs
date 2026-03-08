@@ -6,15 +6,59 @@ namespace QuantityMeasurementApp.ConsoleApp
 {
     public static class QuantityMeasurementApp
     {
+        // legacy service kept for backward compatibility; new architecture uses controller
         private static readonly IQuantityService _service = new QuantityService();
 
-        public static bool AreFeetEqual(double first, double second) => _service.AreFeetEqual(first, second);
-        public static bool AreInchesEqual(double first, double second) => _service.AreInchesEqual(first, second);
+        private static readonly Controllers.QuantityMeasurementController _controller;
+
+        static QuantityMeasurementApp()
+        {
+            // initialize new architecture components
+            var repo = Repositories.QuantityMeasurementCacheRepository.Instance;
+            var svc = new Services.QuantityMeasurementServiceImpl(repo);
+            _controller = new Controllers.QuantityMeasurementController(svc);
+        }
+
+        // simple helpers to translate DTOs
+        private static bool BoolResult(Models.QuantityDTO dto) => dto?.BoolResult ?? false;
+        private static double NumericResult(Models.QuantityDTO dto) => dto?.ResultValue ?? 0.0;
+
+        public static bool AreFeetEqual(double first, double second)
+        {
+            var dto1 = new Models.QuantityDTO(first, LengthUnit.Feet);
+            var dto2 = new Models.QuantityDTO(second, LengthUnit.Feet);
+            var res = _controller.Compare(dto1, dto2);
+            return BoolResult(res);
+        }
+
+        public static bool AreInchesEqual(double first, double second)
+        {
+            var dto1 = new Models.QuantityDTO(first, LengthUnit.Inch);
+            var dto2 = new Models.QuantityDTO(second, LengthUnit.Inch);
+            var res = _controller.Compare(dto1, dto2);
+            return BoolResult(res);
+        }
+
         public static bool AreEqualAcrossUnits(double first, LengthUnit unit1, double second, LengthUnit unit2)
-            => _service.AreEqualAcrossUnits(first, unit1, second, unit2);
-        public static double Convert(double value, LengthUnit source, LengthUnit target) => _service.Convert(value, source, target);
-        public static QuantityLength Convert(QuantityLength source, LengthUnit target) => _service.Convert(source, target);
-        public static QuantityLength Add(QuantityLength first, QuantityLength second) => _service.Add(first, second);
+        {
+            var dto1 = new Models.QuantityDTO(first, unit1);
+            var dto2 = new Models.QuantityDTO(second, unit2);
+            var res = _controller.Compare(dto1, dto2);
+            return BoolResult(res);
+        }
+
+        public static double Convert(double value, LengthUnit source, LengthUnit target)
+        {
+            var dto = new Models.QuantityDTO(value, source);
+            var res = _controller.Convert(dto, target);
+            return NumericResult(res);
+        }
+
+        public static QuantityLength Convert(QuantityLength source, LengthUnit target)
+            => _service.Convert(source, target);
+
+        public static QuantityLength Add(QuantityLength first, QuantityLength second)
+            => _service.Add(first, second);
         public static double Add(double first, LengthUnit unit1, double second, LengthUnit unit2, LengthUnit target)
             => _service.Add(first, unit1, second, unit2, target);
         public static QuantityLength Add(QuantityLength first, QuantityLength second, LengthUnit? targetUnit)

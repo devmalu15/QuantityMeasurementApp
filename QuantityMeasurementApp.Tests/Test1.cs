@@ -1234,6 +1234,61 @@ namespace QuantityMeasurementApp.Tests
             var fahrenheit = new Quantity<TemperatureUnit>(33.0, TemperatureUnit.Fahrenheit); // 33°F is about 0.555°C
             Assert.IsFalse(celsius.Equals(fahrenheit), "0°C should not equal 33°F");
         }
+
+        // ----- UC15 new architecture tests -----
+        [TestMethod]
+        public void testService_CompareEquality_SameUnit_Success()
+        {
+            var repo = QuantityMeasurementApp.ConsoleApp.Repositories.QuantityMeasurementCacheRepository.Instance;
+            var svc = new QuantityMeasurementApp.ConsoleApp.Services.QuantityMeasurementServiceImpl(repo);
+            var dto1 = new QuantityMeasurementApp.ConsoleApp.Models.QuantityDTO(5.0, LengthUnit.Feet);
+            var dto2 = new QuantityMeasurementApp.ConsoleApp.Models.QuantityDTO(5.0, LengthUnit.Feet);
+            var res = svc.Compare(dto1, dto2);
+            Assert.IsTrue(res.BoolResult == true, "Service should report equality for identical quantities");
+        }
+
+        [TestMethod]
+        public void testService_Convert_Success()
+        {
+            var repo = QuantityMeasurementApp.ConsoleApp.Repositories.QuantityMeasurementCacheRepository.Instance;
+            var svc = new QuantityMeasurementApp.ConsoleApp.Services.QuantityMeasurementServiceImpl(repo);
+            var dto = new QuantityMeasurementApp.ConsoleApp.Models.QuantityDTO(1.0, LengthUnit.Feet);
+            var res = svc.Convert(dto, LengthUnit.Inch);
+            // ResultValue is nullable double; use Value property for comparison
+            Assert.AreEqual(12.0, res.ResultValue!.Value, 1e-9, "1 foot should convert to 12 inches via service");
+        }
+
+        [TestMethod]
+        public void testService_Add_UnsupportedOperation_Error()
+        {
+            var repo = QuantityMeasurementApp.ConsoleApp.Repositories.QuantityMeasurementCacheRepository.Instance;
+            var svc = new QuantityMeasurementApp.ConsoleApp.Services.QuantityMeasurementServiceImpl(repo);
+            var t1 = new QuantityMeasurementApp.ConsoleApp.Models.QuantityDTO(20.0, TemperatureUnit.Celsius);
+            var t2 = new QuantityMeasurementApp.ConsoleApp.Models.QuantityDTO(10.0, TemperatureUnit.Celsius);
+            var res = svc.Add(t1, t2);
+            Assert.IsTrue(res.HasError, "Adding temperatures should produce an error entity");
+        }
+
+        [TestMethod]
+        public void testController_DemonstrateEquality_Success()
+        {
+            var repo = QuantityMeasurementApp.ConsoleApp.Repositories.QuantityMeasurementCacheRepository.Instance;
+            var svc = new QuantityMeasurementApp.ConsoleApp.Services.QuantityMeasurementServiceImpl(repo);
+            var ctrl = new QuantityMeasurementApp.ConsoleApp.Controllers.QuantityMeasurementController(svc);
+            var dto1 = new QuantityMeasurementApp.ConsoleApp.Models.QuantityDTO(2.0, WeightUnit.Kilogram);
+            var dto2 = new QuantityMeasurementApp.ConsoleApp.Models.QuantityDTO(2000.0, WeightUnit.Gram);
+            var res = ctrl.Compare(dto1, dto2);
+            Assert.IsTrue(res.BoolResult == true, "Controller should report equality when service does");
+        }
+
+        [TestMethod]
+        public void testEntity_Immutability()
+        {
+            var ent = new QuantityMeasurementApp.ConsoleApp.Models.QuantityMeasurementEntity(1.0, LengthUnit.Feet, "Convert");
+            // properties have getters only; ensure values match expected
+            Assert.AreEqual(1.0, ent.FirstValue);
+            Assert.AreEqual(LengthUnit.Feet, ent.FirstUnit);
+        }
     }
 }
 
