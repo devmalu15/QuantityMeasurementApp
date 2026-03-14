@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementApp.Tests\\QuantityMeasurementApp.Tests.csproj": {}
+    "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementApp.Tests\\QuantityMeasurementApp.Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementApp.Tests\\QuantityMeasurementApp.Tests.csproj": {
+    "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementApp.Tests\\QuantityMeasurementApp.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementApp.Tests\\QuantityMeasurementApp.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementApp.Tests\\QuantityMeasurementApp.Tests.csproj",
         "projectName": "QuantityMeasurementApp.Tests",
-        "projectPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementApp.Tests\\QuantityMeasurementApp.Tests.csproj",
+        "projectPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementApp.Tests\\QuantityMeasurementApp.Tests.csproj",
         "packagesPath": "C:\\Users\\malud\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementApp.Tests\\obj\\",
+        "outputPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementApp.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -32,11 +32,11 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementBusinessLayer\\QuantityMeasurementBusinessLayer.csproj": {
-                "projectPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementBusinessLayer\\QuantityMeasurementBusinessLayer.csproj"
+              "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementBusinessLayer\\QuantityMeasurementBusinessLayer.csproj": {
+                "projectPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementBusinessLayer\\QuantityMeasurementBusinessLayer.csproj"
               },
-              "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj": {
-                "projectPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj"
+              "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj": {
+                "projectPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj"
               }
             }
           }
@@ -356,14 +356,14 @@
         }
       }
     },
-    "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementBusinessLayer\\QuantityMeasurementBusinessLayer.csproj": {
+    "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementBusinessLayer\\QuantityMeasurementBusinessLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementBusinessLayer\\QuantityMeasurementBusinessLayer.csproj",
+        "projectUniqueName": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementBusinessLayer\\QuantityMeasurementBusinessLayer.csproj",
         "projectName": "QuantityMeasurementBusinessLayer",
-        "projectPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementBusinessLayer\\QuantityMeasurementBusinessLayer.csproj",
+        "projectPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementBusinessLayer\\QuantityMeasurementBusinessLayer.csproj",
         "packagesPath": "C:\\Users\\malud\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementBusinessLayer\\obj\\",
+        "outputPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementBusinessLayer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -384,11 +384,11 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj": {
-                "projectPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj"
+              "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj": {
+                "projectPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj"
               },
-              "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementRepositoryLayer\\QuantityMeasurementRepositoryLayer.csproj": {
-                "projectPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementRepositoryLayer\\QuantityMeasurementRepositoryLayer.csproj"
+              "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementRepositoryLayer\\QuantityMeasurementRepositoryLayer.csproj": {
+                "projectPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementRepositoryLayer\\QuantityMeasurementRepositoryLayer.csproj"
               }
             }
           }
@@ -702,14 +702,14 @@
         }
       }
     },
-    "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj": {
+    "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj",
+        "projectUniqueName": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj",
         "projectName": "QuantityMeasurementModelLayer",
-        "projectPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj",
+        "projectPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj",
         "packagesPath": "C:\\Users\\malud\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\obj\\",
+        "outputPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1041,14 +1041,14 @@
         }
       }
     },
-    "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementRepositoryLayer\\QuantityMeasurementRepositoryLayer.csproj": {
+    "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementRepositoryLayer\\QuantityMeasurementRepositoryLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementRepositoryLayer\\QuantityMeasurementRepositoryLayer.csproj",
+        "projectUniqueName": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementRepositoryLayer\\QuantityMeasurementRepositoryLayer.csproj",
         "projectName": "QuantityMeasurementRepositoryLayer",
-        "projectPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementRepositoryLayer\\QuantityMeasurementRepositoryLayer.csproj",
+        "projectPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementRepositoryLayer\\QuantityMeasurementRepositoryLayer.csproj",
         "packagesPath": "C:\\Users\\malud\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementRepositoryLayer\\obj\\",
+        "outputPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementRepositoryLayer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1069,8 +1069,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj": {
-                "projectPath": "C:\\Users\\malud\\Downloads\\QuantityMeasurementApp\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj"
+              "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj": {
+                "projectPath": "C:\\Users\\malud\\OneDrive\\Desktop\\QuantityMeasurementApp\\QuantityMeasurementModelLayer\\QuantityMeasurementModelLayer.csproj"
               }
             }
           }

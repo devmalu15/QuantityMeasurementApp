@@ -2,7 +2,7 @@ using System;
 using QuantityMeasurementBusinessLayer.Interfaces;
 using QuantityMeasurementModelLayer.DTO;
 
-public class Menu
+public class Menu : IMenu
 {
     private readonly IQuantityMeasurementService service;
 

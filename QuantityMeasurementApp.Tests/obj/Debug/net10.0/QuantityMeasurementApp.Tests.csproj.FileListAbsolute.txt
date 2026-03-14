@@ -548,3 +548,16 @@ C:\Users\malud\Downloads\QuantityMeasurementApp\QuantityMeasurementApp\QuantityM
 C:\Users\malud\Downloads\QuantityMeasurementApp\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.pdb
 C:\Users\malud\Downloads\QuantityMeasurementApp\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.genruntimeconfig.cache
 C:\Users\malud\Downloads\QuantityMeasurementApp\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\ref\QuantityMeasurementApp.Tests.dll
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\bin\Debug\net10.0\.msCoverageExtensionSourceRootsMapping_QuantityMeasurementApp.Tests
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\bin\Debug\net10.0\.msCoverageSourceRootsMapping_QuantityMeasurementApp.Tests
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.csproj.AssemblyReference.cache
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.gentestingplatformentrypointinputcache.cache
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.genautoregisteredextensionsinputcache.cache
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.AssemblyInfoInputs.cache
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.AssemblyInfo.cs
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.csproj.CoreCompileInputs.cache
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.sourcelink.json
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.dll
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\refint\QuantityMeasurementApp.Tests.dll
+C:\Users\malud\OneDrive\Desktop\QuantityMeasurementApp\QuantityMeasurementApp.Tests\obj\Debug\net10.0\QuantityMeasurementApp.Tests.pdb
