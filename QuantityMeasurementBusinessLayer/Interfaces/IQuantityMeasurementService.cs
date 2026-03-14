@@ -1,4 +1,5 @@
 using QuantityMeasurementModelLayer.DTO;
+using QuantityMeasurementModelLayer.Entities;
 
 namespace QuantityMeasurementBusinessLayer.Interfaces;
 
@@ -13,4 +14,6 @@ public interface IQuantityMeasurementService
     QuantityDTO Subtract(QuantityDTO q1, QuantityDTO q2);
 
     double Divide(QuantityDTO q1, QuantityDTO q2);
+
+    List<QuantityMeasurementEntity> GetHistory();
 }

@@ -82,6 +82,8 @@ public class QuantityMeasurementServiceImpl : IQuantityMeasurementService
 
         double value = v1 - v2;
 
+        repository.Save(new QuantityMeasurementEntity("SUBTRACT", q1.Value, q2.Value, value.ToString()));
+
         return new QuantityDTO(value, q1.Unit);
     }
 
@@ -90,30 +92,45 @@ public class QuantityMeasurementServiceImpl : IQuantityMeasurementService
         double v1 = ConvertToBase(q1.Value, q1.Unit);
         double v2 = ConvertToBase(q2.Value, q2.Unit);
 
-        return v1 / v2;
+        double result = v1 / v2;
+
+        repository.Save(new QuantityMeasurementEntity("DIVIDE", q1.Value, q2.Value, result.ToString()));
+
+        return result;
     }
 
    public QuantityDTO Convert(QuantityDTO input, string targetUnit)
 {
     double baseValue = ConvertToBase(input.Value, input.Unit);
 
-    if (Enum.TryParse(targetUnit, out LengthUnit length))
+    if (Enum.TryParse(targetUnit, out LengthUnit length)){
+        repository.Save(new QuantityMeasurementEntity("CONVERSION", input.Value, 0, targetUnit.ToString()));
         return new QuantityDTO(baseValue / length.GetConversionFactor(), targetUnit);
+    }
+        
 
-    if (Enum.TryParse(targetUnit, out WeightUnit weight))
+    if (Enum.TryParse(targetUnit, out WeightUnit weight)){
+        repository.Save(new QuantityMeasurementEntity("CONVERSION", input.Value, 0, targetUnit));
         return new QuantityDTO(baseValue / weight.GetConversionFactor(), targetUnit);
+    }
+        
 
-    if (Enum.TryParse(targetUnit, out VolumeUnit volume))
+    if (Enum.TryParse(targetUnit, out VolumeUnit volume)){
+        repository.Save(new QuantityMeasurementEntity("CONVERSION", input.Value, 0, targetUnit));
         return new QuantityDTO(baseValue / volume.ToBaseUnit(), targetUnit);
+    }
+        
 
     if (Enum.TryParse(targetUnit, out TemperatureUnit temp))
     {
         switch (temp)
         {
             case TemperatureUnit.CELSIUS:
+                repository.Save(new QuantityMeasurementEntity("CONVERSION", input.Value, 0, targetUnit));
                 return new QuantityDTO(baseValue, targetUnit);
 
             case TemperatureUnit.FAHRENHEIT:
+                repository.Save(new QuantityMeasurementEntity("CONVERSION", input.Value, 0, targetUnit));
                 return new QuantityDTO(baseValue * 9 / 5 + 32, targetUnit);
 
            
@@ -122,4 +139,9 @@ public class QuantityMeasurementServiceImpl : IQuantityMeasurementService
 
     throw new ArgumentException("Unsupported target unit");
 }
+
+    public List<QuantityMeasurementEntity> GetHistory()
+    {
+        return repository.GetAll();
+    }
 }

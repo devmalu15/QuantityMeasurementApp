@@ -1,6 +1,7 @@
 using System;
 using QuantityMeasurementBusinessLayer.Interfaces;
 using QuantityMeasurementModelLayer.DTO;
+using QuantityMeasurementModelLayer.Entities;
 
 public class Menu : IMenu
 {
@@ -22,13 +23,20 @@ public class Menu : IMenu
                 Console.WriteLine("2 Volume");
                 Console.WriteLine("3 Weight");
                 Console.WriteLine("4 Temperature");
-                Console.WriteLine("5 Exit");
+                Console.WriteLine("5 View History");
+                Console.WriteLine("6 Exit");
 
                 Console.Write("Enter choice: ");
                 int type = Convert.ToInt32(Console.ReadLine());
 
-                if (type == 5)
+                if (type == 6)
                     return;
+
+                if (type == 5)
+                {
+                    ViewHistory();
+                    continue;
+                }
 
                 OperationMenu(type);
             }
@@ -193,5 +201,21 @@ break;
     private void PrintResult(QuantityDTO result)
     {
         Console.WriteLine($"\nResult = {result.Value} {result.Unit}");
+    }
+
+    private void ViewHistory()
+    {
+        var history = service.GetHistory();
+        if (history.Count == 0)
+        {
+            Console.WriteLine("No operations in history.");
+            return;
+        }
+
+        Console.WriteLine("\n===== Operation History =====");
+        foreach (var item in history)
+        {
+            Console.WriteLine($"{item.Operation}: {item.Operand1} and {item.Operand2} = {item.Result}");
+        }
     }
 }
