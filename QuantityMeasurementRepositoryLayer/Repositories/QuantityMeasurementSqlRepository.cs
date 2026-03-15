@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using QuantityMeasurementModelLayer.Entities;
 using QuantityMeasurementRepositoryLayer.Interfaces;
 
@@ -6,7 +7,12 @@ namespace QuantityMeasurementRepositoryLayer.Repositories;
 
 public class QuantityMeasurementSqlRepository : IQuantityMeasurementRepositorySql
 {
-    private readonly string _connectionString = "Server=LAPTOP-MSP0ESL1\\SQLEXPRESS;Database=QuantityMeasurementDB;Trusted_Connection=true;TrustServerCertificate=true;";
+    private readonly string _connectionString;
+
+    public QuantityMeasurementSqlRepository(IConfiguration configuration)
+    {
+        _connectionString = configuration.GetConnectionString("DefaultConnection");
+    }
 
     public void Save(QuantityMeasurementEntity entity)
     {
