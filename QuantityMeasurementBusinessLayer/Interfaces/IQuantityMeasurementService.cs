@@ -15,5 +15,7 @@ public interface IQuantityMeasurementService
 
     double Divide(QuantityDTO q1, QuantityDTO q2);
 
-    List<QuantityMeasurementEntity> GetHistory();
+    List<QuantityMeasurementEntity> GetCacheHistory();
+
+    List<QuantityMeasurementEntity> GetSqlHistory();
 }

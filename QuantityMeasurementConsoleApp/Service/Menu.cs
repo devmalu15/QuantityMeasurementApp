@@ -23,18 +23,25 @@ public class Menu : IMenu
                 Console.WriteLine("2 Volume");
                 Console.WriteLine("3 Weight");
                 Console.WriteLine("4 Temperature");
-                Console.WriteLine("5 View History");
-                Console.WriteLine("6 Exit");
+                Console.WriteLine("5 View Cache History");
+                Console.WriteLine("6 View SQL History");
+                Console.WriteLine("7 Exit");
 
                 Console.Write("Enter choice: ");
                 int type = Convert.ToInt32(Console.ReadLine());
 
-                if (type == 6)
+                if (type == 7)
                     return;
 
                 if (type == 5)
                 {
-                    ViewHistory();
+                    ViewCacheHistory();
+                    continue;
+                }
+
+                if (type == 6)
+                {
+                    ViewSqlHistory();
                     continue;
                 }
 
@@ -203,19 +210,42 @@ break;
         Console.WriteLine($"\nResult = {result.Value} {result.Unit}");
     }
 
-    private void ViewHistory()
+    private void ViewCacheHistory()
     {
-        var history = service.GetHistory();
+        var history = service.GetCacheHistory();
         if (history.Count == 0)
         {
-            Console.WriteLine("No operations in history.");
+            Console.WriteLine("No operations in cache history.");
             return;
         }
 
-        Console.WriteLine("\n===== Operation History =====");
+        Console.WriteLine("\n===== Cache Operation History =====");
         foreach (var item in history)
         {
             Console.WriteLine($"{item.Operation}: {item.Operand1} and {item.Operand2} = {item.Result}");
+        }
+    }
+
+    private void ViewSqlHistory()
+    {
+        try
+        {
+            var history = service.GetSqlHistory();
+            if (history.Count == 0)
+            {
+                Console.WriteLine("No operations in SQL history.");
+                return;
+            }
+
+            Console.WriteLine("\n===== SQL Operation History =====");
+            foreach (var item in history)
+            {
+                Console.WriteLine($"{item.Operation}: {item.Operand1} and {item.Operand2} = {item.Result}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error retrieving SQL history: " + ex.Message);
         }
     }
 }

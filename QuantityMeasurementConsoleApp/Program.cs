@@ -10,6 +10,7 @@ class Program
     {
         var provider = new ServiceCollection()
             .AddSingleton<IQuantityMeasurementRepository, QuantityMeasurementCacheRepository>()
+            .AddSingleton<IQuantityMeasurementRepositorySql, QuantityMeasurementSqlRepository>()
             .AddScoped<IQuantityMeasurementService, QuantityMeasurementServiceImpl>()
             .BuildServiceProvider();
 
