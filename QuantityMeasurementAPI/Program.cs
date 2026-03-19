@@ -1,48 +1,57 @@
-using Microsoft.EntityFrameworkCore;
-using NLog.Web;
+
 using QuantityMeasurementBusinessLayer.Interfaces;
 using QuantityMeasurementBusinessLayer.Services;
-using QuantityMeasurementRepositoryLayer.Context;
 using QuantityMeasurementRepositoryLayer.Interfaces;
 using QuantityMeasurementRepositoryLayer.Repositories;
-
+ 
 var builder = WebApplication.CreateBuilder(args);
-
-// Configure NLog
-builder.Logging.ClearProviders();
-builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
-builder.Host.UseNLog();
-
-// Add services to the container.
+ 
+// ── Service Registration ──────────────────────────────────────────────────────
+ 
+// Controllers — scans for all classes that extend ControllerBase
 builder.Services.AddControllers();
-
-// Add Swagger
+ 
+// Swagger — API documentation UI
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// Add DB Context
-builder.Services.AddDbContext<QuantityMeasurementDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Add DI services
-builder.Services.AddSingleton<IQuantityMeasurementRepository, QuantityMeasurementCacheRepository>();
-builder.Services.AddScoped<IQuantityMeasurementRepositorySql, QuantityMeasurementEFRepository>();
+ 
+// Redis Cache — registers IDistributedCache backed by Redis
+// InstanceName prefixes all keys: "QMA_measurement_xxx", "QMA_all_measurement_keys"
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration["Redis:ConnectionString"];
+    options.InstanceName  = "QMA_";
+});
+ 
+// Repository Layer
+// IQuantityMeasurementRepository → QuantityMeasurementRedisRepository (NEW Redis-backed cache)
+// IQuantityMeasurementRepositorySql → QuantityMeasurementSqlRepository (unchanged ADO.NET)
+builder.Services.AddScoped<IQuantityMeasurementRepository,    QuantityMeasurementRedisRepository>();
+builder.Services.AddScoped<IQuantityMeasurementRepositorySql, QuantityMeasurementSqlRepository>();
+ 
+// Business Layer
+// QuantityMeasurementServiceImpl gets both repos injected automatically
 builder.Services.AddScoped<IQuantityMeasurementService, QuantityMeasurementServiceImpl>();
-
-
+ 
+// IConfiguration — needed by SqlRepository constructor to read connection string
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+ 
+// ── Build ─────────────────────────────────────────────────────────────────────
+ 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
+ 
+// ── Middleware Pipeline ───────────────────────────────────────────────────────
+ 
+// Swagger UI — only in Development mode
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+ 
+// Routing and Controllers
+app.UseRouting();
 app.MapControllers();
-
-// EF Core Migrations Comments
-// Run the following commands in the Package Manager Console or CLI to create and apply migrations:
-// dotnet ef migrations add InitialCreate --project QuantityMeasurementRepositoryLayer --startup-project QuantityMeasurementAPI
-// dotnet ef database update --project QuantityMeasurementRepositoryLayer --startup-project QuantityMeasurementAPI
-
+ 
 app.Run();
+ 
