@@ -1,3 +1,4 @@
+
 using QuantityMeasurementBusinessLayer.Interfaces;
 using QuantityMeasurementModelLayer.DTO;
 using QuantityMeasurementRepositoryLayer.Interfaces;
@@ -19,30 +20,19 @@ public class QuantityMeasurementServiceImpl : IQuantityMeasurementService
         sqlRepository   = sqlRepo;
     }
  
-    // ── Private helper — unchanged from UC16 ──────────────────────────────────
     private double ConvertToBase(double value, string unit)
     {
-        if (Enum.TryParse(unit, out LengthUnit length))
-            return value * length.GetConversionFactor();
-        if (Enum.TryParse(unit, out WeightUnit weight))
-            return value * weight.GetConversionFactor();
- 
-        if (Enum.TryParse(unit, out VolumeUnit volume))
-            return value * volume.ToBaseUnit();
- 
+        if (Enum.TryParse(unit, out LengthUnit length))   return value * length.GetConversionFactor();
+        if (Enum.TryParse(unit, out WeightUnit weight))   return value * weight.GetConversionFactor();
+        if (Enum.TryParse(unit, out VolumeUnit volume))   return value * volume.ToBaseUnit();
         if (Enum.TryParse(unit, out TemperatureUnit temp))
         {
-            switch (temp)
-            {
-                case TemperatureUnit.CELSIUS:    return value;
-                case TemperatureUnit.FAHRENHEIT: return (value - 32) * 5 / 9;
-            }
+            if (temp == TemperatureUnit.CELSIUS)    return value;
+            if (temp == TemperatureUnit.FAHRENHEIT) return (value - 32) * 5 / 9;
         }
- 
         throw new ArgumentException("Unsupported unit");
     }
  
-    // ── Operations — unchanged from UC16 ────────────────────────────────────
     public bool Compare(QuantityDTO q1, QuantityDTO q2)
     {
         double v1 = ConvertToBase(q1.Value, q1.Unit);
@@ -56,10 +46,10 @@ public class QuantityMeasurementServiceImpl : IQuantityMeasurementService
  
     public QuantityDTO Add(QuantityDTO q1, QuantityDTO q2)
     {
-        double v1    = ConvertToBase(q1.Value, q1.Unit);
-        double v2    = ConvertToBase(q2.Value, q2.Unit);
+        double v1 = ConvertToBase(q1.Value, q1.Unit);
+        double v2 = ConvertToBase(q2.Value, q2.Unit);
         double value = v1 + v2;
-        var entity   = new QuantityMeasurementEntity("ADD", q1.Value, q2.Value, value.ToString());
+        var entity = new QuantityMeasurementEntity("ADD", q1.Value, q2.Value, value.ToString());
         cacheRepository.Save(entity);
         sqlRepository.Save(entity);
         return new QuantityDTO(value, q1.Unit);
@@ -67,10 +57,10 @@ public class QuantityMeasurementServiceImpl : IQuantityMeasurementService
  
     public QuantityDTO Subtract(QuantityDTO q1, QuantityDTO q2)
     {
-        double v1    = ConvertToBase(q1.Value, q1.Unit);
-        double v2    = ConvertToBase(q2.Value, q2.Unit);
+        double v1 = ConvertToBase(q1.Value, q1.Unit);
+        double v2 = ConvertToBase(q2.Value, q2.Unit);
         double value = v1 - v2;
-        var entity   = new QuantityMeasurementEntity("SUBTRACT", q1.Value, q2.Value, value.ToString());
+        var entity = new QuantityMeasurementEntity("SUBTRACT", q1.Value, q2.Value, value.ToString());
         cacheRepository.Save(entity);
         sqlRepository.Save(entity);
         return new QuantityDTO(value, q1.Unit);
@@ -78,10 +68,10 @@ public class QuantityMeasurementServiceImpl : IQuantityMeasurementService
  
     public double Divide(QuantityDTO q1, QuantityDTO q2)
     {
-        double v1     = ConvertToBase(q1.Value, q1.Unit);
-        double v2     = ConvertToBase(q2.Value, q2.Unit);
+        double v1 = ConvertToBase(q1.Value, q1.Unit);
+        double v2 = ConvertToBase(q2.Value, q2.Unit);
         double result = v1 / v2;
-        var entity    = new QuantityMeasurementEntity("DIVIDE", q1.Value, q2.Value, result.ToString());
+        var entity = new QuantityMeasurementEntity("DIVIDE", q1.Value, q2.Value, result.ToString());
         cacheRepository.Save(entity);
         sqlRepository.Save(entity);
         return result;
@@ -90,46 +80,28 @@ public class QuantityMeasurementServiceImpl : IQuantityMeasurementService
     public QuantityDTO Convert(QuantityDTO input, string targetUnit)
     {
         double baseValue = ConvertToBase(input.Value, input.Unit);
- 
         void SaveBoth() {
             var e = new QuantityMeasurementEntity("CONVERSION", input.Value, 0, targetUnit);
             cacheRepository.Save(e);
             sqlRepository.Save(e);
         }
- 
         if (Enum.TryParse(targetUnit, out LengthUnit length))
         { SaveBoth(); return new QuantityDTO(baseValue / length.GetConversionFactor(), targetUnit); }
- 
         if (Enum.TryParse(targetUnit, out WeightUnit weight))
         { SaveBoth(); return new QuantityDTO(baseValue / weight.GetConversionFactor(), targetUnit); }
- 
         if (Enum.TryParse(targetUnit, out VolumeUnit volume))
         { SaveBoth(); return new QuantityDTO(baseValue / volume.ToBaseUnit(), targetUnit); }
- 
         if (Enum.TryParse(targetUnit, out TemperatureUnit temp))
         {
             SaveBoth();
             if (temp == TemperatureUnit.CELSIUS)    return new QuantityDTO(baseValue, targetUnit);
             if (temp == TemperatureUnit.FAHRENHEIT) return new QuantityDTO(baseValue * 9 / 5 + 32, targetUnit);
         }
- 
         throw new ArgumentException("Unsupported target unit");
     }
  
-    // ── History methods ───────────────────────────────────────────────────────
-    public List<QuantityMeasurementEntity> GetCacheHistory()
-    {
-        return cacheRepository.GetAll();
-    }
- 
-    public List<QuantityMeasurementEntity> GetSqlHistory()
-    {
-        return sqlRepository.GetAll();
-    }
- 
-    // ADDED — calls the same cacheRepository which is now wired to Redis in API Program.cs
-    public List<QuantityMeasurementEntity> GetRedisHistory()
-    {
-        return cacheRepository.GetAll();
-    }
+    public List<QuantityMeasurementEntity> GetCacheHistory()  => cacheRepository.GetAll();
+    public List<QuantityMeasurementEntity> GetRedisHistory()  => cacheRepository.GetAll();
+    public List<QuantityMeasurementEntity> GetSqlHistory()    => sqlRepository.GetAll();
+    public List<QuantityMeasurementEntity> GetEFHistory()     => sqlRepository.GetAll(); // ADDED
 }
