@@ -103,5 +103,5 @@ public class QuantityMeasurementServiceImpl : IQuantityMeasurementService
     public List<QuantityMeasurementEntity> GetCacheHistory()  => cacheRepository.GetAll();
     public List<QuantityMeasurementEntity> GetRedisHistory()  => cacheRepository.GetAll();
     public List<QuantityMeasurementEntity> GetSqlHistory()    => sqlRepository.GetAll();
-    public List<QuantityMeasurementEntity> GetEFHistory()     => sqlRepository.GetAll(); // ADDED
+    public List<QuantityMeasurementEntity> GetEFHistory()     => sqlRepository.GetAll(); 
 }

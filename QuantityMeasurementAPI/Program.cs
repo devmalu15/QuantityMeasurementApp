@@ -8,7 +8,7 @@ using QuantityMeasurementRepositoryLayer.Repositories;
  
 var builder = WebApplication.CreateBuilder(args);
  
-// ── Service Registration ──────────────────────────────────────────────────────
+// Service Registration
  
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -22,27 +22,27 @@ builder.Services.AddStackExchangeRedisCache(options =>
 });
  
 // Entity Framework Core — DbContext registered with SQL Server provider
-// Reads connection string from appsettings.json → ConnectionStrings → DefaultConnection
+// Reads connection string from appsettings.json
 builder.Services.AddDbContext<QuantityMeasurementDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
  
 // Repository Layer
-// IQuantityMeasurementRepository  → Redis (cache layer)
-// IQuantityMeasurementRepositorySql → EF Core (replaces ADO.NET as the active SQL implementation)
+// IQuantityMeasurementRepository
+// IQuantityMeasurementRepositorySql 
 builder.Services.AddScoped<IQuantityMeasurementRepository,    QuantityMeasurementRedisRepository>();
 builder.Services.AddScoped<IQuantityMeasurementRepositorySql, QuantityMeasurementEFRepository>();
  
 // Business Layer
 builder.Services.AddScoped<IQuantityMeasurementService, QuantityMeasurementServiceImpl>();
  
-// IConfiguration — needed by SqlRepository if it is ever used directly
+// IConfiguration 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
  
-// ── Build ─────────────────────────────────────────────────────────────────────
+//Build
  
 var app = builder.Build();
  
-// ── Middleware Pipeline ───────────────────────────────────────────────────────
+// Middleware
  
 if (app.Environment.IsDevelopment())
 {

@@ -15,7 +15,5 @@ public interface IQuantityMeasurementService
     List<QuantityMeasurementEntity> GetCacheHistory();
     List<QuantityMeasurementEntity> GetRedisHistory();
     List<QuantityMeasurementEntity> GetSqlHistory();
- 
-    // ADDED — returns history via EF Core repository
     List<QuantityMeasurementEntity> GetEFHistory();
 }

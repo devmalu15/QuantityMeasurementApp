@@ -5,18 +5,14 @@ namespace QuantityMeasurementRepositoryLayer.Context;
  
 public class QuantityMeasurementDbContext : DbContext
 {
-    // Constructor — receives DbContextOptions injected by DI
-    // DbContextOptions contains the connection string and provider (SQL Server)
     public QuantityMeasurementDbContext(DbContextOptions<QuantityMeasurementDbContext> options)
         : base(options)
     {
     }
 
-    // DbSet represents the QuantityMeasurements table
-    // EF translates LINQ queries on this DbSet into SQL automatically
     public DbSet<QuantityMeasurementEntity> Measurements { get; set; }
  
-    // OnModelCreating — Fluent API configuration (overrides Data Annotations when needed)
+    // OnModelCreating
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<QuantityMeasurementEntity>(entity =>
@@ -27,7 +23,7 @@ public class QuantityMeasurementDbContext : DbContext
             // Primary key
             entity.HasKey(e => e.Id);
  
-            // Column constraints
+            // Columns
             entity.Property(e => e.Operation)
                   .IsRequired()
                   .HasMaxLength(20);

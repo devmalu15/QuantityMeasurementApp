@@ -22,7 +22,7 @@ namespace QuantityMeasurementModelLayer.Entities
         [MaxLength(50)]
         public string Result { get; set; }
  
-        // Required for Redis JSON deserialization — do not remove
+        // Required for Redis JSON deserialization
         public QuantityMeasurementEntity() { }
  
         public QuantityMeasurementEntity(string operation, double op1, double op2, string result)

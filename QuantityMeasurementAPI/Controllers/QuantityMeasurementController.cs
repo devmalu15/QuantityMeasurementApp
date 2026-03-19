@@ -20,7 +20,6 @@ public class QuantityMeasurementController : ControllerBase
         _logger = logger;
     }
 
-    // ── POST /api/quantity/add ───────────────────────────────────────────────
     [HttpPost("add")]
     public IActionResult Add([FromBody] QuantityOperationRequest request)
     {
@@ -35,7 +34,6 @@ public class QuantityMeasurementController : ControllerBase
         catch (Exception ex) { return StatusCode(500, ex.Message); }
     }
 
-    // ── POST /api/quantity/subtract ──────────────────────────────────────────
     [HttpPost("subtract")]
     public IActionResult Subtract([FromBody] QuantityOperationRequest request)
     {
@@ -50,7 +48,7 @@ public class QuantityMeasurementController : ControllerBase
         catch (Exception ex) { return StatusCode(500, ex.Message); }
     }
 
-    // ── POST /api/quantity/divide ────────────────────────────────────────────
+
     [HttpPost("divide")]
     public IActionResult Divide([FromBody] QuantityOperationRequest request)
     {
@@ -66,7 +64,6 @@ public class QuantityMeasurementController : ControllerBase
         catch (Exception ex) { return StatusCode(500, ex.Message); }
     }
 
-    // ── POST /api/quantity/compare ───────────────────────────────────────────
     [HttpPost("compare")]
     public IActionResult Compare([FromBody] QuantityOperationRequest request)
     {
@@ -80,7 +77,7 @@ public class QuantityMeasurementController : ControllerBase
         catch (Exception ex) { return StatusCode(500, ex.Message); }
     }
 
-    // ── POST /api/quantity/convert ───────────────────────────────────────────
+  
     [HttpPost("convert")]
     public IActionResult Convert([FromBody] QuantityConvertRequest request)
     {
@@ -95,7 +92,6 @@ public class QuantityMeasurementController : ControllerBase
         catch (Exception ex) { return StatusCode(500, ex.Message); }
     }
 
-    // ── GET /api/quantity/history/redis ──────────────────────────────────────
     [HttpGet("history/redis")]
     public IActionResult GetRedisHistory()
     {
@@ -108,7 +104,7 @@ public class QuantityMeasurementController : ControllerBase
         catch (Exception ex) { return StatusCode(500, ex.Message); }
     }
 
-    // ── GET /api/quantity/history/sql ────────────────────────────────────────
+
     [HttpGet("history/sql")]
     public IActionResult GetSqlHistory()
     {
@@ -123,7 +119,7 @@ public class QuantityMeasurementController : ControllerBase
 
 
 
-    // ── GET /api/quantity/history/ef ────────────────────────────────────────────
+  
     [HttpGet("history/ef")]
     public IActionResult GetEFHistory()
     {
