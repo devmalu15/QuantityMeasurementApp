@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuantityMeasurementAPI.Models;
 using QuantityMeasurementBusinessLayer.Interfaces;
@@ -7,6 +8,7 @@ namespace QuantityMeasurementAPI.Controllers;
 
 [ApiController]
 [Route("api/quantity")]
+[Authorize]   
 public class QuantityMeasurementController : ControllerBase
 {
     private readonly IQuantityMeasurementService _service;
