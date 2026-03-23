@@ -13,7 +13,7 @@ using QuantityMeasurementRepositoryLayer.Repositories;
  
 var builder = WebApplication.CreateBuilder(args);
  
-// ── Controllers and Swagger ───────────────────────────────────────────────────
+// ── Controllers and Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
  
@@ -49,18 +49,18 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
  
-// ── Redis ─────────────────────────────────────────────────────────────────────
+// Redis
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration["Redis:ConnectionString"];
     options.InstanceName  = "QMA_";
 });
  
-// ── Entity Framework Core ─────────────────────────────────────────────────────
+// Entity Framework Core
 builder.Services.AddDbContext<QuantityMeasurementDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
  
-// ── ASP.NET Core Identity ─────────────────────────────────────────────────────
+// ASP.NET Core Identity
 // Registers UserManager, SignInManager, RoleManager
 // Uses IdentityUser (built-in user class) and QuantityMeasurementDbContext for storage
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -78,7 +78,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<QuantityMeasurementDbContext>() // use EF to store users
 .AddDefaultTokenProviders();                              // for password reset tokens
  
-// ── JWT Authentication ─────────────────────────────────────────────────────────
+// JWT Authentication
 // Configures how incoming tokens are validated
 builder.Services.AddAuthentication(options =>
 {
@@ -105,21 +105,21 @@ builder.Services.AddAuthentication(options =>
 // Authorization — checks [Authorize] attributes on controllers
 builder.Services.AddAuthorization();
  
-// ── Repository Layer ──────────────────────────────────────────────────────────
+// Repository Layer 
 builder.Services.AddScoped<IQuantityMeasurementRepository,    QuantityMeasurementRedisRepository>();
 builder.Services.AddScoped<IQuantityMeasurementRepositorySql, QuantityMeasurementEFRepository>();
  
-// ── Business Layer ────────────────────────────────────────────────────────────
+// Business Layer
 builder.Services.AddScoped<IQuantityMeasurementService, QuantityMeasurementServiceImpl>();
 builder.Services.AddScoped<IAuthService, AuthServiceImpl>();  // NEW
  
-// ── Configuration ─────────────────────────────────────────────────────────────
+// Configuration
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
  
-// ── Build ─────────────────────────────────────────────────────────────────────
+// Build 
 var app = builder.Build();
  
-// ── Middleware Pipeline ───────────────────────────────────────────────────────
+// Middleware Pipeline 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
