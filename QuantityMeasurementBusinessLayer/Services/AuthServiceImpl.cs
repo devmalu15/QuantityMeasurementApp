@@ -33,7 +33,7 @@ public class AuthServiceImpl : IAuthService
         // Create a new IdentityUser object
         var user = new IdentityUser
         {
-            UserName = dto.Email,   // Identity requires UserName — use email as username
+            UserName = dto.Email,   // Identity requires UserName — using email as username
             Email    = dto.Email
         };
  
@@ -77,7 +77,6 @@ public class AuthServiceImpl : IAuthService
         };
     }
  
-    // Private helper — generates the JWT token string
     private string GenerateJwtToken(IdentityUser user)
     {
         // Claims are pieces of information embedded in the token

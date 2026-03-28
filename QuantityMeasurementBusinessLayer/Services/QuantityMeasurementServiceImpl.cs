@@ -81,9 +81,9 @@ public class QuantityMeasurementServiceImpl : IQuantityMeasurementService
     {
         double baseValue = ConvertToBase(input.Value, input.Unit);
         void SaveBoth() {
-            var e = new QuantityMeasurementEntity("CONVERSION", input.Value, 0, targetUnit);
-            cacheRepository.Save(e);
-            sqlRepository.Save(e);
+            var entity = new QuantityMeasurementEntity("CONVERSION", input.Value, 0, targetUnit);
+            cacheRepository.Save(entity);
+            sqlRepository.Save(entity);
         }
         if (Enum.TryParse(targetUnit, out LengthUnit length))
         { SaveBoth(); return new QuantityDTO(baseValue / length.GetConversionFactor(), targetUnit); }

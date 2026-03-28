@@ -15,16 +15,14 @@ public class QuantityMeasurementDbContext : IdentityDbContext<IdentityUser>
         : base(options)
     {
     }
- 
-    // Your existing table — unchanged
+
     public DbSet<QuantityMeasurementEntity> Measurements { get; set; }
  
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // MUST call base — this configures all Identity tables
+        //this configures all Identity tables
         base.OnModelCreating(modelBuilder);
  
-        // Your existing Fluent API configuration — unchanged
         modelBuilder.Entity<QuantityMeasurementEntity>(entity =>
         {
             entity.ToTable("QuantityMeasurements");

@@ -62,14 +62,14 @@ public class QuantityMeasurementRedisRepository : IQuantityMeasurementRepository
         }
     }
  
-    // ── READ — Cache-Aside pattern ────────────────────────────────────────────
+    // READ Cache-Aside pattern
     // Check Redis first. If found, return immediately (cache hit).
     // If not found (cache miss), read from DB, store in Redis, return.
     public List<QuantityMeasurementEntity> GetAll()
     {
         try
         {
-            // STEP 1: Try to get data from Redis
+            // Try to get data from Redis
             string? cachedJson = _cache.GetString(CacheKey);
  
             if (cachedJson != null)

@@ -13,7 +13,7 @@ using QuantityMeasurementRepositoryLayer.Repositories;
  
 var builder = WebApplication.CreateBuilder(args);
  
-// ── Controllers and Swagger
+// Controllers and Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
  
@@ -104,6 +104,25 @@ builder.Services.AddAuthentication(options =>
  
 // Authorization — checks [Authorize] attributes on controllers
 builder.Services.AddAuthorization();
+
+
+//CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
+                  "http://localhost:5173",   // API's own origin (for wwwroot fallback)
+                  "http://127.0.0.1:5500",  // VS Code Live Server default port
+                  "http://localhost:5500",   // alternative Live Server port
+                  "null"                    // file:// origin when opened directly
+              )
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
  
 // Repository Layer 
 builder.Services.AddScoped<IQuantityMeasurementRepository,    QuantityMeasurementRedisRepository>();
@@ -111,7 +130,7 @@ builder.Services.AddScoped<IQuantityMeasurementRepositorySql, QuantityMeasuremen
  
 // Business Layer
 builder.Services.AddScoped<IQuantityMeasurementService, QuantityMeasurementServiceImpl>();
-builder.Services.AddScoped<IAuthService, AuthServiceImpl>();  // NEW
+builder.Services.AddScoped<IAuthService, AuthServiceImpl>(); 
  
 // Configuration
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
@@ -119,7 +138,7 @@ builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 // Build 
 var app = builder.Build();
  
-// Middleware Pipeline 
+// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -127,10 +146,12 @@ if (app.Environment.IsDevelopment())
 }
  
 app.UseRouting();
+
+app.UseCors("AllowFrontend"); //CORS
  
-// ORDER MATTERS: Authentication must come before Authorization
-app.UseAuthentication();  // NEW — validates JWT token on every request
-app.UseAuthorization();   // NEW — checks [Authorize] attributes
+
+app.UseAuthentication();  // validates JWT token on every request
+app.UseAuthorization();   // checks [Authorize] attributes
  
 app.MapControllers();
 app.Run();
