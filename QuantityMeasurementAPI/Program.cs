@@ -107,20 +107,35 @@ builder.Services.AddAuthorization();
 
 
 //CORS
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy("AllowFrontend", policy =>
+//     {
+//         policy.WithOrigins(
+//                   "http://localhost:5173",   // API's own origin (for wwwroot fallback)
+//                   "http://127.0.0.1:5500",  // VS Code Live Server default port
+//                   "http://localhost:5500",   // alternative Live Server port
+//                   "null"                    // file:// origin when opened directly
+//               )
+//               .AllowAnyHeader()
+//               .AllowAnyMethod();
+//     });
+// });
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
-                  "http://localhost:5173",   // API's own origin (for wwwroot fallback)
-                  "http://127.0.0.1:5500",  // VS Code Live Server default port
-                  "http://localhost:5500",   // alternative Live Server port
-                  "null"                    // file:// origin when opened directly
+                  "http://localhost:5173",
+                  "http://localhost:4200",   // — Angular dev server
+                  "http://127.0.0.1:4200"    // — alternative Angular URL
               )
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
+
 
 
  
