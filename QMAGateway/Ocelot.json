@@ -2,81 +2,38 @@
   "Routes": [
 
     {
-      "UpstreamPathTemplate":   "/api/auth/register",
-      "UpstreamHttpMethod":     [ "POST" ],
-      "DownstreamPathTemplate": "/api/auth/register",
-      "DownstreamScheme":       "http",
-      "DownstreamHostAndPorts": [ { "Host": "localhost", "Port": 6001 } ]
+      "UpstreamPathTemplate": "/api/auth/{everything}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/auth/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        { "Host": "auth-service.runasp.net", "Port": 443 }
+      ]
     },
+
     {
-      "UpstreamPathTemplate":   "/api/auth/login",
-      "UpstreamHttpMethod":     [ "POST" ],
-      "DownstreamPathTemplate": "/api/auth/login",
-      "DownstreamScheme":       "http",
-      "DownstreamHostAndPorts": [ { "Host": "localhost", "Port": 6001 } ]
+      "UpstreamPathTemplate": "/api/quantity/{everything}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/quantity/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        { "Host": "operation-service.runasp.net", "Port": 443 }
+      ]
     },
- 
-   
+
     {
-      "UpstreamPathTemplate":   "/api/quantity/add",
-      "UpstreamHttpMethod":     [ "POST" ],
-      "DownstreamPathTemplate": "/api/quantity/add",
-      "DownstreamScheme":       "http",
-      "DownstreamHostAndPorts": [ { "Host": "localhost", "Port": 6002 } ]
-    },
-    {
-      "UpstreamPathTemplate":   "/api/quantity/subtract",
-      "UpstreamHttpMethod":     [ "POST" ],
-      "DownstreamPathTemplate": "/api/quantity/subtract",
-      "DownstreamScheme":       "http",
-      "DownstreamHostAndPorts": [ { "Host": "localhost", "Port": 6002 } ]
-    },
-    {
-      "UpstreamPathTemplate":   "/api/quantity/divide",
-      "UpstreamHttpMethod":     [ "POST" ],
-      "DownstreamPathTemplate": "/api/quantity/divide",
-      "DownstreamScheme":       "http",
-      "DownstreamHostAndPorts": [ { "Host": "localhost", "Port": 6002 } ]
-    },
-    {
-      "UpstreamPathTemplate":   "/api/quantity/compare",
-      "UpstreamHttpMethod":     [ "POST" ],
-      "DownstreamPathTemplate": "/api/quantity/compare",
-      "DownstreamScheme":       "http",
-      "DownstreamHostAndPorts": [ { "Host": "localhost", "Port": 6002 } ]
-    },
-    {
-      "UpstreamPathTemplate":   "/api/quantity/convert",
-      "UpstreamHttpMethod":     [ "POST" ],
-      "DownstreamPathTemplate": "/api/quantity/convert",
-      "DownstreamScheme":       "http",
-      "DownstreamHostAndPorts": [ { "Host": "localhost", "Port": 6002 } ]
-    },
- 
-    {
-      "UpstreamPathTemplate":   "/api/quantity/history/redis",
-      "UpstreamHttpMethod":     [ "GET" ],
-      "DownstreamPathTemplate": "/api/quantity/history/redis",
-      "DownstreamScheme":       "http",
-      "DownstreamHostAndPorts": [ { "Host": "localhost", "Port": 6003 } ]
-    },
-    {
-      "UpstreamPathTemplate":   "/api/quantity/history/ef",
-      "UpstreamHttpMethod":     [ "GET" ],
-      "DownstreamPathTemplate": "/api/quantity/history/ef",
-      "DownstreamScheme":       "http",
-      "DownstreamHostAndPorts": [ { "Host": "localhost", "Port": 6003 } ]
-    },
-    {
-      "UpstreamPathTemplate":   "/api/quantity/history/sql",
-      "UpstreamHttpMethod":     [ "GET" ],
-      "DownstreamPathTemplate": "/api/quantity/history/sql",
-      "DownstreamScheme":       "http",
-      "DownstreamHostAndPorts": [ { "Host": "localhost", "Port": 6003 } ]
+      "UpstreamPathTemplate": "/api/quantity/history/{everything}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/quantity/history/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        { "Host": "history-service.runasp.net", "Port": 443 }
+      ]
     }
+
   ],
- 
+
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5173"
+    "BaseUrl": "https://ocelot-gateway.runasp.net"
   }
 }
