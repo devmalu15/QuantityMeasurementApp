@@ -1,29 +1,32 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
- 
+
 var builder = WebApplication.CreateBuilder(args);
- 
-// Load ocelot.json alongside appsettings.json
+
+// 1. Add Ocelot configuration file
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
- 
-// CORS — allow Angular frontend
+
+// 2. DEFINE THE CORS POLICY
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngular", policy =>
+    options.AddPolicy("GatewayCorsPolicy", pb =>
     {
-        policy.WithOrigins("http://localhost:4200", "http://localhost:5173")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        pb.WithOrigins("https://quantity-measurement-frontend.vercel.app")
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+          .AllowCredentials(); 
     });
 });
- 
+
 builder.Services.AddOcelot(builder.Configuration);
- 
+
 var app = builder.Build();
- 
-app.UseCors("AllowAngular");
- 
-// Ocelot middleware handles ALL routing — no MapControllers needed
+
+// 3. APPLY THE CORS POLICY 
+// This MUST come before app.UseOcelot().Wait()
+app.UseCors("GatewayCorsPolicy");
+
+// 4. Use Ocelot
 await app.UseOcelot();
- 
+
 app.Run();
