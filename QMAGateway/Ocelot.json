@@ -1,0 +1,77 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate":   "/api/auth/register",
+      "UpstreamHttpMethod":     [ "POST" ],
+      "DownstreamPathTemplate": "/api/auth/register",
+      "DownstreamScheme":       "https",
+      "DownstreamHostAndPorts": [ { "Host": "qma-auth.runasp.net", "Port": 443 } ]
+    },
+    {
+      "UpstreamPathTemplate":   "/api/auth/login",
+      "UpstreamHttpMethod":     [ "POST" ],
+      "DownstreamPathTemplate": "/api/auth/login",
+      "DownstreamScheme":       "https",
+      "DownstreamHostAndPorts": [ { "Host": "qma-auth.runasp.net", "Port": 443 } ]
+    },
+    {
+      "UpstreamPathTemplate":   "/api/quantity/add",
+      "UpstreamHttpMethod":     [ "POST" ],
+      "DownstreamPathTemplate": "/api/quantity/add",
+      "DownstreamScheme":       "https",
+      "DownstreamHostAndPorts": [ { "Host": "qma-operation.runasp.net", "Port": 443 } ]
+    },
+    {
+      "UpstreamPathTemplate":   "/api/quantity/subtract",
+      "UpstreamHttpMethod":     [ "POST" ],
+      "DownstreamPathTemplate": "/api/quantity/subtract",
+      "DownstreamScheme":       "https",
+      "DownstreamHostAndPorts": [ { "Host": "qma-operation.runasp.net", "Port": 443 } ]
+    },
+    {
+      "UpstreamPathTemplate":   "/api/quantity/divide",
+      "UpstreamHttpMethod":     [ "POST" ],
+      "DownstreamPathTemplate": "/api/quantity/divide",
+      "DownstreamScheme":       "https",
+      "DownstreamHostAndPorts": [ { "Host": "qma-operation.runasp.net", "Port": 443 } ]
+    },
+    {
+      "UpstreamPathTemplate":   "/api/quantity/compare",
+      "UpstreamHttpMethod":     [ "POST" ],
+      "DownstreamPathTemplate": "/api/quantity/compare",
+      "DownstreamScheme":       "https",
+      "DownstreamHostAndPorts": [ { "Host": "qma-operation.runasp.net", "Port": 443 } ]
+    },
+    {
+      "UpstreamPathTemplate":   "/api/quantity/convert",
+      "UpstreamHttpMethod":     [ "POST" ],
+      "DownstreamPathTemplate": "/api/quantity/convert",
+      "DownstreamScheme":       "https",
+      "DownstreamHostAndPorts": [ { "Host": "qma-operation.runasp.net", "Port": 443 } ]
+    },
+    {
+      "UpstreamPathTemplate":   "/api/quantity/history/redis",
+      "UpstreamHttpMethod":     [ "GET" ],
+      "DownstreamPathTemplate": "/api/quantity/history/redis",
+      "DownstreamScheme":       "https",
+      "DownstreamHostAndPorts": [ { "Host": "qma-history.runasp.net", "Port": 443 } ]
+    },
+    {
+      "UpstreamPathTemplate":   "/api/quantity/history/ef",
+      "UpstreamHttpMethod":     [ "GET" ],
+      "DownstreamPathTemplate": "/api/quantity/history/ef",
+      "DownstreamScheme":       "https",
+      "DownstreamHostAndPorts": [ { "Host": "qma-history.runasp.net", "Port": 443 } ]
+    },
+    {
+      "UpstreamPathTemplate":   "/api/quantity/history/sql",
+      "UpstreamHttpMethod":     [ "GET" ],
+      "DownstreamPathTemplate": "/api/quantity/history/sql",
+      "DownstreamScheme":       "https",
+      "DownstreamHostAndPorts": [ { "Host": "qma-history.runasp.net", "Port": 443 } ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://qma-gateway.runasp.net"
+  }
+}
