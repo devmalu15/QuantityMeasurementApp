@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="AuthService/AuthService.csproj" />
+  <Project Path="HistoryService/HistoryService.csproj" />
+  <Project Path="OperationService/OperationService.csproj" />
+  <Project Path="QMAGateway/QMAGateway.csproj" />
+</Solution>
