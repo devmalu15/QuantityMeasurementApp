@@ -11,7 +11,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("GatewayCorsPolicy", pb =>
     {
-        pb.WithOrigins("https://quantity-measurement-frontend.vercel.app")
+        pb.WithOrigins("https://qmabydevmalu.vercel.app")
           .AllowAnyHeader()
           .AllowAnyMethod()
           .AllowCredentials(); 
