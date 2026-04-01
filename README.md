@@ -8,7 +8,7 @@
 [![Backend](https://img.shields.io/badge/Backend-.NET_10_API-512BD4?style=for-the-badge&logo=dotnet)](https://monsterasp.net)
 [![Frontend](https://img.shields.io/badge/Frontend-Angular_17-DD0031?style=for-the-badge&logo=angular)](https://qmabydevmalu.vercel.app)
 
-*Built from scratch · February 2026 — April 2026*
+*Built from scratch · March 2026*
 
 </div>
 
