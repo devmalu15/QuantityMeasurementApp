@@ -22,7 +22,7 @@ public class HistoryController : ControllerBase
         _cache = cache;
     }
  
-    // Cache-Aside: Redis first → DB fallback
+    // Cache-Aside
     [HttpGet("history/redis")]
     public IActionResult GetRedisHistory()
     {
@@ -48,12 +48,12 @@ public class HistoryController : ControllerBase
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
                 });
         }
-        catch { /* Redis down — return DB data anyway */ }
+        catch { /* Redis down — return DB data */ }
  
         return Ok(entities);
     }
  
-    // Always reads directly from SQL Server
+    //reads directly from SQL Server
     [HttpGet("history/ef")]
     public IActionResult GetEFHistory()
     {

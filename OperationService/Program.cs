@@ -19,7 +19,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.InstanceName  = "QMA_";
 });
  
-// JWT validation — same key/issuer/audience as AuthService
+// JWT validation
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

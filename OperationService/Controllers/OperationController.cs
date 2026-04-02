@@ -9,7 +9,6 @@ namespace OperationService.Controllers;
  
 [ApiController]
 [Route("api/quantity")]
-[Authorize]
 public class OperationController : ControllerBase
 {
     private readonly OperationDbContext _db;
@@ -97,23 +96,23 @@ public class OperationController : ControllerBase
         catch (Exception ex)         { return StatusCode(500, ex.Message); }
     }
  
-    // ── Unit conversion helpers ─────────────────────────────────────────────
+   
     private static double ToBase(double value, string unit) => unit.ToUpper() switch
     {
-        // Length — base: FEET
+        // Length
         "FEET"        => value,
         "INCHES"      => value / 12.0,
         "YARDS"       => value * 3.0,
         "CENTIMETERS" => value / 30.48,
-        // Weight — base: KILOGRAM
+        // Weight
         "KILOGRAM"    => value,
         "GRAM"        => value * 0.001,
         "POUND"       => value * 0.45359237,
-        // Volume — base: LITRE
+        // Volume
         "LITRE"       => value,
         "MILLILITRE"  => value * 0.001,
         "GALLON"      => value * 3.78541,
-        // Temperature — base: CELSIUS
+        // Temperature
         "CELSIUS"     => value,
         "FAHRENHEIT"  => (value - 32) * 5.0 / 9.0,
         _             => throw new ArgumentException($"Unsupported unit: {unit}")
@@ -136,14 +135,14 @@ public class OperationController : ControllerBase
         _             => throw new ArgumentException($"Unsupported unit: {targetUnit}")
     };
  
-    // ── Save to DB and invalidate cache ────────────────────────────────────
+   
     private void Save(string op, double o1, double o2, string result)
     {
         var entity = new MeasurementEntity(op, o1, o2, result);
         _db.Measurements.Add(entity);
         _db.SaveChanges();
  
-        try { _cache.Remove(CacheKey); }  // invalidate Redis cache
+        try { _cache.Remove(CacheKey); }
         catch { /* Redis down — ignore */ }
     }
 }
